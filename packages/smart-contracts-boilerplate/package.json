@@ -3,13 +3,13 @@
   "scripts": {
     "compile": "yarn hardhat compile",
     "coverage": "hardhat coverage",
+    "deploy": "yarn hardhat deploy",
     "gas": "cross-env REPORT_GAS=1 yarn hardhat test",
     "lint": "yarn solhint 'contracts/**/*.sol' && yarn prettier --check './**'",
     "lint:fix": "yarn sort-package-json && yarn prettier --write './**' && yarn solhint --fix 'contracts/**/*.sol'",
     "prepare": "husky install",
     "size": "yarn hardhat size-contracts",
-    "test": "yarn compile && yarn hardhat test",
-    "deploy": "yarn hardhat deploy"
+    "test": "yarn compile && yarn hardhat test"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.3.2"
