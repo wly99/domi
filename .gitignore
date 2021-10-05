@@ -1,0 +1,8 @@
+.env
+
+# JS related
+node_modules
+
+#Hardhat files
+cache
+artifacts
