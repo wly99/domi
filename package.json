@@ -1,0 +1,19 @@
+{
+  "name": "domi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wly99/domi.git"
+  },
+  "author": "Wang Liang Yi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wly99/domi/issues"
+  },
+  "homepage": "https://github.com/wly99/domi#readme"
+}
