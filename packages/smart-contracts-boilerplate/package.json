@@ -2,13 +2,14 @@
   "name": "hardhat-project",
   "scripts": {
     "compile": "yarn hardhat compile",
-    "lint": "yarn solhint 'contracts/**/*.sol' && yarn prettier --check './**'",
-    "lint:fix": "yarn sort-package-json && yarn prettier --write './**' && yarn solhint --fix 'contracts/**/*.sol'",
-    "test": "yarn compile && yarn hardhat test",
     "coverage": "hardhat coverage",
     "gas": "cross-env REPORT_GAS=1 yarn hardhat test",
+    "lint": "yarn solhint 'contracts/**/*.sol' && yarn prettier --check './**'",
+    "lint:fix": "yarn sort-package-json && yarn prettier --write './**' && yarn solhint --fix 'contracts/**/*.sol'",
+    "prepare": "husky install",
     "size": "yarn hardhat size-contracts",
-    "prepare": "husky install"
+    "test": "yarn compile && yarn hardhat test",
+    "deploy": "yarn hardhat deploy"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.3.2"
@@ -30,7 +31,9 @@
     "ethers": "^5.4.7",
     "hardhat": "^2.6.4",
     "hardhat-contract-sizer": "^2.1.1",
+    "hardhat-deploy": "^0.9.3",
     "hardhat-gas-reporter": "^1.0.4",
+    "hardhat-preprocessor": "^0.1.4",
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.18",
     "solhint": "^3.3.6",

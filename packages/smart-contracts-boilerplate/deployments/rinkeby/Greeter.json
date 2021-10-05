@@ -1,0 +1,107 @@
+{
+  "address": "0x9E0D26178089B98Af3E3e0e10c9Fc1CFc195cbd8",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_greeting",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "greet",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "greeting",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_greeting",
+          "type": "string"
+        }
+      ],
+      "name": "setGreeting",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x6e8758c1fdf943266d23cd585caba291d39325ecbbf5fba68c166fba64264ef4",
+  "receipt": {
+    "to": null,
+    "from": "0x428C7F55cF935909512d845e3740b1C81CB38632",
+    "contractAddress": "0x9E0D26178089B98Af3E3e0e10c9Fc1CFc195cbd8",
+    "transactionIndex": 35,
+    "gasUsed": "294285",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x962d4babfd759b6b5d412f4301eae3dc52d47dbdce0b372c88c8fa5e08a7187f",
+    "transactionHash": "0x6e8758c1fdf943266d23cd585caba291d39325ecbbf5fba68c166fba64264ef4",
+    "logs": [],
+    "blockNumber": 9410166,
+    "cumulativeGasUsed": "4143442",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "Guten tag, Rinkeby!"
+  ],
+  "solcInputHash": "c5e886144786c904197003fbc50a47bc",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_greeting\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"greet\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"greeting\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_greeting\",\"type\":\"string\"}],\"name\":\"setGreeting\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Greeter.sol\":\"Greeter\"},\"evmVersion\":\"istanbul\",\"libraries\":{\":__CACHE_BREAKER__\":\"0x00000000d41867734bbee4c6863d9255b2b06ac1\"},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/utils/math/SafeMath.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\n// CAUTION\\n// This version of SafeMath should only be used with Solidity 0.8 or later,\\n// because it relies on the compiler's built in overflow checks.\\n\\n/**\\n * @dev Wrappers over Solidity's arithmetic operations.\\n *\\n * NOTE: `SafeMath` is no longer needed starting with Solidity 0.8. The compiler\\n * now has built in overflow checking.\\n */\\nlibrary SafeMath {\\n    /**\\n     * @dev Returns the addition of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryAdd(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            uint256 c = a + b;\\n            if (c < a) return (false, 0);\\n            return (true, c);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the substraction of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function trySub(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b > a) return (false, 0);\\n            return (true, a - b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryMul(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            // Gas optimization: this is cheaper than requiring 'a' not being zero, but the\\n            // benefit is lost if 'b' is also tested.\\n            // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522\\n            if (a == 0) return (true, 0);\\n            uint256 c = a * b;\\n            if (c / a != b) return (false, 0);\\n            return (true, c);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the division of two unsigned integers, with a division by zero flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryDiv(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b == 0) return (false, 0);\\n            return (true, a / b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers, with a division by zero flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryMod(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        unchecked {\\n            if (b == 0) return (false, 0);\\n            return (true, a % b);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the addition of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `+` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Addition cannot overflow.\\n     */\\n    function add(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a + b;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting on\\n     * overflow (when the result is negative).\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a - b;\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `*` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Multiplication cannot overflow.\\n     */\\n    function mul(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a * b;\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers, reverting on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a / b;\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * reverting when dividing by zero.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b) internal pure returns (uint256) {\\n        return a % b;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting with custom message on\\n     * overflow (when the result is negative).\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {trySub}.\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(\\n        uint256 a,\\n        uint256 b,\\n        string memory errorMessage\\n    ) internal pure returns (uint256) {\\n        unchecked {\\n            require(b <= a, errorMessage);\\n            return a - b;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers, reverting with custom message on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\\n     * uses an invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(\\n        uint256 a,\\n        uint256 b,\\n        string memory errorMessage\\n    ) internal pure returns (uint256) {\\n        unchecked {\\n            require(b > 0, errorMessage);\\n            return a / b;\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * reverting with custom message when dividing by zero.\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {tryMod}.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(\\n        uint256 a,\\n        uint256 b,\\n        string memory errorMessage\\n    ) internal pure returns (uint256) {\\n        unchecked {\\n            require(b > 0, errorMessage);\\n            return a % b;\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x8666f020bd8fc9dc14f07e2ebc52b5f236ab4cdde7c77679b08cb2f94730043b\",\"license\":\"MIT\"},\"contracts/Greeter.sol\":{\"content\":\"//SPDX-License-Identifier: Unlicense\\npragma solidity ^0.8.0;\\n\\n\\nimport '@openzeppelin/contracts/utils/math/SafeMath.sol';\\n\\ncontract Greeter {\\n  string public greeting;\\n\\n  constructor(string memory _greeting) {\\n\\n    greeting = _greeting;\\n  }\\n\\n  function greet() public view returns (string memory) {\\n    return greeting;\\n  }\\n\\n  function setGreeting(string memory _greeting) public {\\n\\n    greeting = _greeting;\\n  }\\n}\\n\",\"keccak256\":\"0xc45a5665b65b51a20c8af691f72e3391926a99ff434d4230b3afed8506f00137\",\"license\":\"Unlicense\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506040516105d03803806105d083398101604081905261002f916100e2565b8051610042906000906020840190610049565b50506101f5565b828054610055906101a4565b90600052602060002090601f01602090048101928261007757600085556100bd565b82601f1061009057805160ff19168380011785556100bd565b828001600101855582156100bd579182015b828111156100bd5782518255916020019190600101906100a2565b506100c99291506100cd565b5090565b5b808211156100c957600081556001016100ce565b600060208083850312156100f4578182fd5b82516001600160401b038082111561010a578384fd5b818501915085601f83011261011d578384fd5b81518181111561012f5761012f6101df565b604051601f8201601f1916810185018381118282101715610152576101526101df565b6040528181528382018501881015610168578586fd5b8592505b81831015610189578383018501518184018601529184019161016c565b8183111561019957858583830101525b979650505050505050565b6002810460018216806101b857607f821691505b602082108114156101d957634e487b7160e01b600052602260045260246000fd5b50919050565b634e487b7160e01b600052604160045260246000fd5b6103cc806102046000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c8063a413686214610046578063cfae32171461005b578063ef690cc014610079575b600080fd5b610059610054366004610251565b610081565b005b610063610098565b60405161007091906102f2565b60405180910390f35b61006361012a565b80516100949060009060208401906101b8565b5050565b6060600080546100a790610345565b80601f01602080910402602001604051908101604052809291908181526020018280546100d390610345565b80156101205780601f106100f557610100808354040283529160200191610120565b820191906000526020600020905b81548152906001019060200180831161010357829003601f168201915b5050505050905090565b6000805461013790610345565b80601f016020809104026020016040519081016040528092919081815260200182805461016390610345565b80156101b05780601f10610185576101008083540402835291602001916101b0565b820191906000526020600020905b81548152906001019060200180831161019357829003601f168201915b505050505081565b8280546101c490610345565b90600052602060002090601f0160209004810192826101e6576000855561022c565b82601f106101ff57805160ff191683800117855561022c565b8280016001018555821561022c579182015b8281111561022c578251825591602001919060010190610211565b5061023892915061023c565b5090565b5b80821115610238576000815560010161023d565b60006020808385031215610263578182fd5b823567ffffffffffffffff8082111561027a578384fd5b818501915085601f83011261028d578384fd5b81358181111561029f5761029f610380565b604051601f8201601f19168101850183811182821017156102c2576102c2610380565b60405281815283820185018810156102d8578586fd5b818585018683013790810190930193909352509392505050565b6000602080835283518082850152825b8181101561031e57858101830151858201604001528201610302565b8181111561032f5783604083870101525b50601f01601f1916929092016040019392505050565b60028104600182168061035957607f821691505b6020821081141561037a57634e487b7160e01b600052602260045260246000fd5b50919050565b634e487b7160e01b600052604160045260246000fdfea2646970667358221220a2b4a4704314a73830a72b5266778c80e7566f8a3fec733d05090c0d75b9585964736f6c63430008000033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c8063a413686214610046578063cfae32171461005b578063ef690cc014610079575b600080fd5b610059610054366004610251565b610081565b005b610063610098565b60405161007091906102f2565b60405180910390f35b61006361012a565b80516100949060009060208401906101b8565b5050565b6060600080546100a790610345565b80601f01602080910402602001604051908101604052809291908181526020018280546100d390610345565b80156101205780601f106100f557610100808354040283529160200191610120565b820191906000526020600020905b81548152906001019060200180831161010357829003601f168201915b5050505050905090565b6000805461013790610345565b80601f016020809104026020016040519081016040528092919081815260200182805461016390610345565b80156101b05780601f10610185576101008083540402835291602001916101b0565b820191906000526020600020905b81548152906001019060200180831161019357829003601f168201915b505050505081565b8280546101c490610345565b90600052602060002090601f0160209004810192826101e6576000855561022c565b82601f106101ff57805160ff191683800117855561022c565b8280016001018555821561022c579182015b8281111561022c578251825591602001919060010190610211565b5061023892915061023c565b5090565b5b80821115610238576000815560010161023d565b60006020808385031215610263578182fd5b823567ffffffffffffffff8082111561027a578384fd5b818501915085601f83011261028d578384fd5b81358181111561029f5761029f610380565b604051601f8201601f19168101850183811182821017156102c2576102c2610380565b60405281815283820185018810156102d8578586fd5b818585018683013790810190930193909352509392505050565b6000602080835283518082850152825b8181101561031e57858101830151858201604001528201610302565b8181111561032f5783604083870101525b50601f01601f1916929092016040019392505050565b60028104600182168061035957607f821691505b6020821081141561037a57634e487b7160e01b600052602260045260246000fd5b50919050565b634e487b7160e01b600052604160045260246000fdfea2646970667358221220a2b4a4704314a73830a72b5266778c80e7566f8a3fec733d05090c0d75b9585964736f6c63430008000033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 316,
+        "contract": "contracts/Greeter.sol:Greeter",
+        "label": "greeting",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_string_storage"
+      }
+    ],
+    "types": {
+      "t_string_storage": {
+        "encoding": "bytes",
+        "label": "string",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
