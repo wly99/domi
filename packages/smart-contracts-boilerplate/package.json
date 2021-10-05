@@ -1,20 +1,42 @@
 {
   "name": "hardhat-project",
+  "scripts": {
+    "compile": "yarn hardhat compile",
+    "lint": "yarn solhint 'contracts/**/*.sol' && yarn prettier --check './**'",
+    "lint:fix": "yarn sort-package-json && yarn prettier --write './**' && yarn solhint --fix 'contracts/**/*.sol'",
+    "test": "yarn compile && yarn hardhat test",
+    "coverage": "hardhat coverage",
+    "gas": "cross-env REPORT_GAS=1 yarn hardhat test",
+    "size": "yarn hardhat size-contracts",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.3.2"
+  },
   "devDependencies": {
+    "@commitlint/cli": "^13.2.0",
+    "@commitlint/config-conventional": "^13.2.0",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@types/chai": "^4.2.22",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.10.2",
     "chai": "^4.3.4",
+    "cross-env": "^7.0.3",
+    "dotenv": "^10.0.0",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.4.7",
     "hardhat": "^2.6.4",
+    "hardhat-contract-sizer": "^2.1.1",
+    "hardhat-gas-reporter": "^1.0.4",
+    "husky": "^7.0.0",
+    "prettier": "^2.4.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.18",
+    "solhint": "^3.3.6",
+    "solhint-plugin-prettier": "^0.0.5",
+    "solidity-coverage": "^0.7.17",
+    "sort-package-json": "^1.52.0",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
-  },
-  "scripts": {
-    "compile": "yarn hardhat compile",
-    "test": "yarn compile && yarn hardhat test"
   }
 }
