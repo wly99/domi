@@ -2,5 +2,15 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { Greeter } from "./Greeter";
+export type { DomiInterface } from "./DomiInterface";
+export type { HomeContractsInterface } from "./HomeContractsInterface";
+export type { MonthlyPaymentsCalculator } from "./MonthlyPaymentsCalculator";
+export type { PrincipalInterface } from "./PrincipalInterface";
+export type { Ownable } from "./Ownable";
 
 export { Greeter__factory } from "./factories/Greeter__factory";
+export { DomiInterface__factory } from "./factories/DomiInterface__factory";
+export { HomeContractsInterface__factory } from "./factories/HomeContractsInterface__factory";
+export { MonthlyPaymentsCalculator__factory } from "./factories/MonthlyPaymentsCalculator__factory";
+export { PrincipalInterface__factory } from "./factories/PrincipalInterface__factory";
+export { Ownable__factory } from "./factories/Ownable__factory";

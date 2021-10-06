@@ -16,12 +16,57 @@ declare module "hardhat/types/runtime" {
       name: "Greeter",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Greeter__factory>;
+    getContractFactory(
+      name: "DomiInterface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.DomiInterface__factory>;
+    getContractFactory(
+      name: "HomeContractsInterface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.HomeContractsInterface__factory>;
+    getContractFactory(
+      name: "MonthlyPaymentsCalculator",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MonthlyPaymentsCalculator__factory>;
+    getContractFactory(
+      name: "PrincipalInterface",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.PrincipalInterface__factory>;
+    getContractFactory(
+      name: "Ownable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Ownable__factory>;
 
     getContractAt(
       name: "Greeter",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Greeter>;
+    getContractAt(
+      name: "DomiInterface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.DomiInterface>;
+    getContractAt(
+      name: "HomeContractsInterface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.HomeContractsInterface>;
+    getContractAt(
+      name: "MonthlyPaymentsCalculator",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MonthlyPaymentsCalculator>;
+    getContractAt(
+      name: "PrincipalInterface",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.PrincipalInterface>;
+    getContractAt(
+      name: "Ownable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Ownable>;
 
     // default types
     getContractFactory(

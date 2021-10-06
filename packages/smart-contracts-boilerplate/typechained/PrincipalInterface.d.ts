@@ -11,7 +11,6 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
-  PayableOverrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -19,40 +18,25 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface GreeterInterface extends ethers.utils.Interface {
+interface PrincipalInterfaceInterface extends ethers.utils.Interface {
   functions: {
-    "greet()": FunctionFragment;
-    "greeting()": FunctionFragment;
-    "setGreeting(string)": FunctionFragment;
+    "getPrincipal(uint256,uint256)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "greet", values?: undefined): string;
-  encodeFunctionData(functionFragment: "greeting", values?: undefined): string;
-  encodeFunctionData(functionFragment: "setGreeting", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "getPrincipal",
+    values: [BigNumberish, BigNumberish]
+  ): string;
 
-  decodeFunctionResult(functionFragment: "greet", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "greeting", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "setGreeting",
+    functionFragment: "getPrincipal",
     data: BytesLike
   ): Result;
 
-  events: {
-    "GreetingUpdated(string,address,uint256)": EventFragment;
-  };
-
-  getEvent(nameOrSignatureOrTopic: "GreetingUpdated"): EventFragment;
+  events: {};
 }
 
-export type GreetingUpdatedEvent = TypedEvent<
-  [string, string, BigNumber] & {
-    _new: string;
-    setter: string;
-    amount: BigNumber;
-  }
->;
-
-export class Greeter extends BaseContract {
+export class PrincipalInterface extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -93,75 +77,45 @@ export class Greeter extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: GreeterInterface;
+  interface: PrincipalInterfaceInterface;
 
   functions: {
-    greet(overrides?: CallOverrides): Promise<[string]>;
-
-    greeting(overrides?: CallOverrides): Promise<[string]>;
-
-    setGreeting(
-      _greeting: string,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    getPrincipal(
+      homeId: BigNumberish,
+      renterAddress: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { principal: BigNumber }>;
   };
 
-  greet(overrides?: CallOverrides): Promise<string>;
-
-  greeting(overrides?: CallOverrides): Promise<string>;
-
-  setGreeting(
-    _greeting: string,
-    overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  getPrincipal(
+    homeId: BigNumberish,
+    renterAddress: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   callStatic: {
-    greet(overrides?: CallOverrides): Promise<string>;
-
-    greeting(overrides?: CallOverrides): Promise<string>;
-
-    setGreeting(_greeting: string, overrides?: CallOverrides): Promise<void>;
+    getPrincipal(
+      homeId: BigNumberish,
+      renterAddress: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
-  filters: {
-    "GreetingUpdated(string,address,uint256)"(
-      _new?: null,
-      setter?: null,
-      amount?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { _new: string; setter: string; amount: BigNumber }
-    >;
-
-    GreetingUpdated(
-      _new?: null,
-      setter?: null,
-      amount?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { _new: string; setter: string; amount: BigNumber }
-    >;
-  };
+  filters: {};
 
   estimateGas: {
-    greet(overrides?: CallOverrides): Promise<BigNumber>;
-
-    greeting(overrides?: CallOverrides): Promise<BigNumber>;
-
-    setGreeting(
-      _greeting: string,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    getPrincipal(
+      homeId: BigNumberish,
+      renterAddress: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    greet(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    greeting(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    setGreeting(
-      _greeting: string,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    getPrincipal(
+      homeId: BigNumberish,
+      renterAddress: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }
