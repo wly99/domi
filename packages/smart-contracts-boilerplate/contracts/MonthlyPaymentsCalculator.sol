@@ -1,97 +1,149 @@
 pragma solidity ^0.8.0;
 
-import "./Ownable.sol";
+import './Ownable.sol';
 
 abstract contract DomiInterface {
-    function getStabilityFee() virtual external view returns ( 
-        uint stabilityFee
-    );
+  function getStabilityFee() external view virtual returns (uint256 stabilityFee);
 }
 
 abstract contract HomeContractsInterface {
-    function getDetails(uint homeId) virtual external view returns ( 
-        uint homePrice,
-        uint monthsPaid,
-        uint term
+  function getDetails(uint256 homeId)
+    external
+    view
+    virtual
+    returns (
+      uint256 homePrice,
+      uint256 monthsPaid,
+      uint256 term
     );
 }
 
 abstract contract PrincipalInterface {
-    function getPrincipal(uint homeId, uint renterAddress) virtual external view returns ( 
-        uint principal
-    );
+  function getPrincipal(uint256 homeId, uint256 renterAddress)
+    external
+    view
+    virtual
+    returns (uint256 principal);
 }
 
 contract MonthlyPaymentsCalculator is Ownable {
-    DomiInterface domiContract;
-    HomeContractsInterface homeContractsContract;
-    PrincipalInterface principalContract;
+  DomiInterface domiContract;
+  HomeContractsInterface homeContractsContract;
+  PrincipalInterface principalContract;
 
-    function setDomiContractAddress(address _address) external onlyOwner {
-        domiContract = DomiInterface(_address);
+  function setDomiContractAddress(address _address) external onlyOwner {
+    domiContract = DomiInterface(_address);
+  }
+
+  function setHomeContractsContractAddress(address _address) external onlyOwner {
+    homeContractsContract = HomeContractsInterface(_address);
+  }
+
+  function setPrincipalContractAddress(address _address) external onlyOwner {
+    principalContract = PrincipalInterface(_address);
+  }
+
+  function calculatePayment(uint256 homeId, uint256 renterAddress)
+    external
+    view
+    returns (
+      uint256,
+      uint256,
+      uint256
+    )
+  {
+    uint256 homePrice;
+    uint256 monthsPaid;
+    uint256 term;
+    uint256 stabilityFee;
+    uint256 principal;
+    (homePrice, monthsPaid, term) = homeContractsContract.getDetails(homeId);
+    uint256 monthsLeft = term * 12 - monthsPaid;
+    stabilityFee = domiContract.getStabilityFee();
+    principal = principalContract.getPrincipal(homeId, renterAddress);
+
+    uint256 stabilityFeePayment;
+    uint256 principalPayment;
+    uint256 bufferPayment;
+    stabilityFeePayment = calculateStabilityFeePayment(homePrice, stabilityFee);
+    principalPayment = calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
+    bufferPayment = calculateBufferPayment(homePrice, stabilityFee);
+    return (stabilityFeePayment, principalPayment, bufferPayment);
+  }
+
+  function calculateStabilityFeePayment(uint256 homePrice, uint256 stabilityFee)
+    private
+    pure
+    returns (uint256)
+  {
+    // +1 is to round up
+    // need to divide 10^2 to get real value(still have not factored in decimals for Domi)
+    return homePrice * stabilityFee / 12 / 10**3 + 1;
+  }
+
+  function calculatePrincipalPayment(
+    // TODO fix bug
+    uint256 homePrice,
+    uint256 stabilityFee,
+    uint256 monthsLeft,
+    uint256 principal
+  ) private pure returns (uint256) {
+    // PMT = PV x ((PV + FV) ÷ ((1 + r)^n-1)) x (-r ÷ (1 + b))
+    // PV or “Present Value” is the value of the principal
+    // FV or “Future Value” is the value of the homePrice.
+    // r or “Rate” is the stabilityFee divided by 12(months) used per compounding period.
+    // n or “Number of Periods” is the number of months of compounding (and payments) that occur.
+    // b or “Rate if Payments at the Beginning” if the payments occur at the end of each period, “b” = 0. If the payments occur at the beginning of each period, “b” = “r”.
+    // PMT or “Payment” is the regular payment each compounding period.
+    // ignore the - in -r as we want to return a positive number
+
+    // (x*10+5) / 10 is to round up
+    // need to divide 10^5 to get real value(still have not factored in decimals for Domi)
+    uint futureValueOfPrincipal = principal*(1 + stabilityFee / 12 / 10**5)**monthsLeft;
+    // return (homePrice - futureValueOfPrincipal) / (1 - (1 + stabilityFee / 12 / 10**5)**monthsLeft);
+    return futureValueOfPrincipal;
+    // return
+    //   principal *
+    //     ((principal + homePrice) / ((1 + (stabilityFee / 12 / 10**3))**monthsLeft - 1)) *
+    //     (stabilityFee / 12);
+  }
+
+  function calculateBufferPayment(uint256 homePrice, uint256 stabilityFee)
+    private
+    pure
+    returns (uint256)
+  {
+    // Decimals = 2, need to divide 10^2 to get real value(still have not factored in decimals for Domi)
+    // +1 is to round up
+    // max(0.001 / 12 * homePrice, 0.1 * stabilityFee / 12 * homePrice)
+    uint minBuffer = 100 * homePrice / 12;
+    uint tenPercentBuffer = 10000 * stabilityFee / 12 * homePrice;
+    if (tenPercentBuffer >= minBuffer) {
+        return tenPercentBuffer / 10**8 + 1;
+    } else {
+        return minBuffer / 10**3 + 1;
     }
+    //return (max((100 * homePrice) / 12, ((10000 * stabilityFee) / 12) * homePrice)) / 10**8 + 1;
+  }
 
-    function setHomeContractsContractAddress(address _address) external onlyOwner {
-        homeContractsContract = HomeContractsInterface(_address);
-    }
+  function max(uint256 a, uint256 b) internal pure returns (uint256) {
+    return a >= b ? a : b;
+  }
 
-    function setPrincipalContractAddress(address _address) external onlyOwner {
-        principalContract = PrincipalInterface(_address);
-    }
+  function min(uint256 a, uint256 b) external pure returns (uint256) {
+    return a <= b ? a : b;
+  }
 
-    function calculatePayment(uint homeId, uint renterAddress) external view returns (uint, uint, uint) {
-        uint homePrice;
-        uint monthsPaid;
-        uint term;
-        uint stabilityFee;
-        uint principal;
-        (homePrice, monthsPaid, term) = homeContractsContract.getDetails(homeId);
-        uint monthsLeft = term * 12 - monthsPaid;
-        stabilityFee = domiContract.getStabilityFee();
-        principal = principalContract.getPrincipal(homeId, renterAddress);
+  function testCalculateStabilityFeePayment(uint256 homePrice, uint256 stabilityFee) external pure returns (uint256) {
+        return calculateStabilityFeePayment(homePrice, stabilityFee);
+  }
+  
+  function testCalculatePrincipalPayment(uint256 homePrice, uint256 stabilityFee, uint256 monthsLeft,
+    uint256 principal) external pure returns (uint256) {
+        return calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
+  }
 
-        uint stabilityFeePayment;
-        uint principalPayment;
-        uint bufferPayment;
-        stabilityFeePayment = calculateStabilityFeePayment(homePrice, stabilityFee);
-        principalPayment = calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
-        bufferPayment = calculateBufferPayment(homePrice, stabilityFee);
-        return (stabilityFeePayment, principalPayment, bufferPayment);
-    }
-
-    function calculateStabilityFeePayment(uint homePrice, uint stabilityFee) private pure returns (uint) {
-        // (x*10+5) / 10 is to round up
-        // need to divide 10^5 to get real value(still have not factored in decimals for Domi)
-        return ((homePrice * stabilityFee / 12) * 10 + 5) / 10;
-    }
-
-    function calculatePrincipalPayment(uint homePrice, uint stabilityFee, uint monthsLeft, uint principal) private pure returns (uint) {
-        // PMT = PV x ((PV + FV) ÷ ((1 + r)^n-1)) x (-r ÷ (1 + b))
-        // PV or “Present Value” is the value of the principal
-        // FV or “Future Value” is the value of the homePrice.
-        // r or “Rate” is the stabilityFee divided by 12(months) used per compounding period.
-        // n or “Number of Periods” is the number of months of compounding (and payments) that occur.
-        // b or “Rate if Payments at the Beginning” if the payments occur at the end of each period, “b” = 0. If the payments occur at the beginning of each period, “b” = “r”.
-        // PMT or “Payment” is the regular payment each compounding period.
-        // ignore the - in -r as we want to return a positive number
-
-        // (x*10+5) / 10 is to round up
-        // need to divide 10^5 to get real value(still have not factored in decimals for Domi)
-        return (principal * ((principal+homePrice) / ((1+(stabilityFee/12)) ** monthsLeft - 1)) * (stabilityFee/12) * 10 + 5) / 10;
-    }
-
-    function calculateBufferPayment(uint homePrice, uint stabilityFee) private pure returns (uint) {
-        // Decimals = 5, need to divide 10^5 to get real value(still have not factored in decimals for Domi)
-        // (x*10+5) / 10 is to round up
-        // max(0.001 / 12 * homePrice, 0.1 * stabilityFee / 12 * homePrice)
-        return (max(100 * homePrice / 12, 10000 * stabilityFee / 12 * homePrice) * 10 + 5) / 10;
-    }
-
-    function max(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a >= b ? a : b;
-    }
-
-    function min(uint256 a, uint256 b) external pure returns (uint256) {
-        return a <= b ? a : b;
-    }
+  function testCalculateBufferPayment(uint256 homePrice, uint256 stabilityFee) external pure returns (uint256) {
+        return calculateBufferPayment(homePrice, stabilityFee);
+  }
 }

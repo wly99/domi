@@ -20,7 +20,7 @@ contract Greeter {
 
   function setGreeting(string memory _greeting) public payable {
     console.log('Changing greeting from', greeting, 'to', _greeting);
-    require(msg.value >= 1 ether, "minimal donation is 1 ether");
+    require(msg.value >= 1 ether, 'minimal donation is 1 ether');
     greeting = _greeting;
     emit GreetingUpdated(_greeting, msg.sender, msg.value);
   }
