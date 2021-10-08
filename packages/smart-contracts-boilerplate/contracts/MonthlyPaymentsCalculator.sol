@@ -78,7 +78,7 @@ contract MonthlyPaymentsCalculator is Ownable {
   {
     // +1 is to round up
     // need to divide 10^2 to get real value(still have not factored in decimals for Domi)
-    return homePrice * stabilityFee / 12 / 10**3 + 1;
+    return (homePrice * stabilityFee) / 12 / 10**3 + 1;
   }
 
   function calculatePrincipalPayment(
@@ -99,7 +99,7 @@ contract MonthlyPaymentsCalculator is Ownable {
 
     // (x*10+5) / 10 is to round up
     // need to divide 10^5 to get real value(still have not factored in decimals for Domi)
-    uint futureValueOfPrincipal = principal*(1 + stabilityFee / 12 / 10**5)**monthsLeft;
+    uint256 futureValueOfPrincipal = principal * (1 + stabilityFee / 12 / 10**5)**monthsLeft;
     // return (homePrice - futureValueOfPrincipal) / (1 - (1 + stabilityFee / 12 / 10**5)**monthsLeft);
     return futureValueOfPrincipal;
     // return
@@ -116,14 +116,13 @@ contract MonthlyPaymentsCalculator is Ownable {
     // Decimals = 2, need to divide 10^2 to get real value(still have not factored in decimals for Domi)
     // +1 is to round up
     // max(0.001 / 12 * homePrice, 0.1 * stabilityFee / 12 * homePrice)
-    uint minBuffer = 100 * homePrice / 12;
-    uint tenPercentBuffer = 10000 * stabilityFee / 12 * homePrice;
+    uint256 minBuffer = (100 * homePrice) / 12;
+    uint256 tenPercentBuffer = ((10000 * stabilityFee) / 12) * homePrice;
     if (tenPercentBuffer >= minBuffer) {
-        return tenPercentBuffer / 10**8 + 1;
+      return tenPercentBuffer / 10**8 + 1;
     } else {
-        return minBuffer / 10**3 + 1;
+      return minBuffer / 10**3 + 1;
     }
-    //return (max((100 * homePrice) / 12, ((10000 * stabilityFee) / 12) * homePrice)) / 10**8 + 1;
   }
 
   function max(uint256 a, uint256 b) internal pure returns (uint256) {
@@ -134,16 +133,28 @@ contract MonthlyPaymentsCalculator is Ownable {
     return a <= b ? a : b;
   }
 
-  function testCalculateStabilityFeePayment(uint256 homePrice, uint256 stabilityFee) external pure returns (uint256) {
-        return calculateStabilityFeePayment(homePrice, stabilityFee);
-  }
-  
-  function testCalculatePrincipalPayment(uint256 homePrice, uint256 stabilityFee, uint256 monthsLeft,
-    uint256 principal) external pure returns (uint256) {
-        return calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
+  function testCalculateStabilityFeePayment(uint256 homePrice, uint256 stabilityFee)
+    external
+    pure
+    returns (uint256)
+  {
+    return calculateStabilityFeePayment(homePrice, stabilityFee);
   }
 
-  function testCalculateBufferPayment(uint256 homePrice, uint256 stabilityFee) external pure returns (uint256) {
-        return calculateBufferPayment(homePrice, stabilityFee);
+  function testCalculatePrincipalPayment(
+    uint256 homePrice,
+    uint256 stabilityFee,
+    uint256 monthsLeft,
+    uint256 principal
+  ) external pure returns (uint256) {
+    return calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
+  }
+
+  function testCalculateBufferPayment(uint256 homePrice, uint256 stabilityFee)
+    external
+    pure
+    returns (uint256)
+  {
+    return calculateBufferPayment(homePrice, stabilityFee);
   }
 }

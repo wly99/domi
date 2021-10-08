@@ -12,26 +12,20 @@ import {
   BaseContract,
   ContractTransaction,
   CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
+} from 'ethers';
+import { BytesLike } from '@ethersproject/bytes';
+import { Listener, Provider } from '@ethersproject/providers';
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface PrincipalInterfaceInterface extends ethers.utils.Interface {
   functions: {
-    "getPrincipal(uint256,uint256)": FunctionFragment;
+    'getPrincipal(uint256,uint256)': FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "getPrincipal",
-    values: [BigNumberish, BigNumberish]
-  ): string;
+  encodeFunctionData(functionFragment: 'getPrincipal', values: [BigNumberish, BigNumberish]): string;
 
-  decodeFunctionResult(
-    functionFragment: "getPrincipal",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: 'getPrincipal', data: BytesLike): Result;
 
   events: {};
 }
@@ -60,9 +54,7 @@ export class PrincipalInterface extends BaseContract {
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
     listener: TypedListener<EventArgsArray, EventArgsObject>
   ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>): this;
 
   listeners(eventName?: string): Array<Listener>;
   off(eventName: string, listener: Listener): this;
@@ -80,42 +72,22 @@ export class PrincipalInterface extends BaseContract {
   interface: PrincipalInterfaceInterface;
 
   functions: {
-    getPrincipal(
-      homeId: BigNumberish,
-      renterAddress: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { principal: BigNumber }>;
+    getPrincipal(homeId: BigNumberish, renterAddress: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber] & { principal: BigNumber }>;
   };
 
-  getPrincipal(
-    homeId: BigNumberish,
-    renterAddress: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getPrincipal(homeId: BigNumberish, renterAddress: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
-    getPrincipal(
-      homeId: BigNumberish,
-      renterAddress: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getPrincipal(homeId: BigNumberish, renterAddress: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   filters: {};
 
   estimateGas: {
-    getPrincipal(
-      homeId: BigNumberish,
-      renterAddress: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getPrincipal(homeId: BigNumberish, renterAddress: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    getPrincipal(
-      homeId: BigNumberish,
-      renterAddress: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getPrincipal(homeId: BigNumberish, renterAddress: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

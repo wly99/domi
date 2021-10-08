@@ -26,33 +26,29 @@ describe('MonthlyPaymentsCalculatorABI', () => {
     expect(await monthlyPaymentsCalculator.min(1, 2)).to.equal(1);
   });
 
-  describe("#calculate stability fee payment", () => {
+  describe('#calculate stability fee payment', () => {
+    it('should return correct value', async () => {
+      expect(await monthlyPaymentsCalculator.testCalculateStabilityFeePayment(homePrice, stabilityFee)).to.equal(16667);
+    });
 
-    it("should return correct value", async () => {
-        expect(await monthlyPaymentsCalculator.testCalculateStabilityFeePayment(homePrice, stabilityFee)).to.equal(16667);
-    })
+    it('should return 1 if stabilityFee is 0', async () => {
+      expect(await monthlyPaymentsCalculator.testCalculateStabilityFeePayment(homePrice, 0)).to.equal(1);
+    });
+  });
 
-    it("should return 1 if stabilityFee is 0", async () => {
-        expect(await monthlyPaymentsCalculator.testCalculateStabilityFeePayment(homePrice, 0)).to.equal(1);
-    })
-  } )
+  describe('#calculate principal payment', () => {
+    it('should return correct value', async () => {
+      expect(await monthlyPaymentsCalculator.testCalculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, 1000)).to.equal(20295000);
+    });
+  });
 
-  describe("#calculate principal payment", () => {
+  describe('#calculate buffer payment', () => {
+    it('should return correct value', async () => {
+      expect(await monthlyPaymentsCalculator.testCalculateBufferPayment(homePrice, stabilityFee)).to.equal(1667);
+    });
 
-    it("should return correct value", async () => {
-        expect(await monthlyPaymentsCalculator.testCalculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, 1000)).to.equal(20295000);
-    })
-  } )
-
-  describe("#calculate buffer payment", () => {
-
-    it("should return correct value", async () => {
-        expect(await monthlyPaymentsCalculator.testCalculateBufferPayment(homePrice, stabilityFee)).to.equal(1667);
-    })
-
-    it("should return 834 if stabilityFee is 0", async () => {
-        expect(await monthlyPaymentsCalculator.testCalculateBufferPayment(homePrice, 0)).to.equal(834);
-    })
-  } )
-
+    it('should return 834 if stabilityFee is 0', async () => {
+      expect(await monthlyPaymentsCalculator.testCalculateBufferPayment(homePrice, 0)).to.equal(834);
+    });
+  });
 });
