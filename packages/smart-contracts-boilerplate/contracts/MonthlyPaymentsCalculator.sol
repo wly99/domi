@@ -19,7 +19,7 @@ abstract contract HomeContractsInterface {
 }
 
 abstract contract PrincipalInterface {
-  function getPrincipal(uint256 homeId, uint256 renterAddress)
+  function getPrincipal(uint256 homeId, address renterAddress)
     external
     view
     virtual
@@ -43,12 +43,12 @@ contract MonthlyPaymentsCalculator is Ownable {
     principalContract = PrincipalInterface(_address);
   }
 
-  function calculatePayment(uint256 homeId, uint256 renterAddress)
+  function calculatePayment(uint256 homeId, address renterAddress)
     external
     view
     returns (
       uint256,
-      uint256,
+      uint,
       uint256
     )
   {
@@ -63,7 +63,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     principal = principalContract.getPrincipal(homeId, renterAddress);
 
     uint256 stabilityFeePayment;
-    uint256 principalPayment;
+    uint principalPayment;
     uint256 bufferPayment;
     stabilityFeePayment = calculateStabilityFeePayment(homePrice, stabilityFee);
     principalPayment = calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
@@ -87,7 +87,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     uint256 stabilityFee,
     uint256 monthsLeft,
     uint256 principal
-  ) private pure returns (uint256) {
+  ) private pure returns (uint) {
     // PMT = PV x ((PV + FV) ÷ ((1 + r)^n-1)) x (-r ÷ (1 + b))
     // PV or “Present Value” is the value of the principal
     // FV or “Future Value” is the value of the homePrice.
@@ -99,10 +99,10 @@ contract MonthlyPaymentsCalculator is Ownable {
 
     // (x*10+5) / 10 is to round up
     // need to divide 10^5 to get real value(still have not factored in decimals for Domi)
-    uint256 futureValueOfPrincipal = principal * (1 + stabilityFee / 12 / 10**5)**monthsLeft;
+    //uint256 futureValueOfPrincipal = principal * (1 + stabilityFee / 12 / 10**5)**monthsLeft;
+    // uint256 futureValueOfPrincipal = principal * (1 + stabilityFee / 12)**monthsLeft;
     // return (homePrice - futureValueOfPrincipal) / (1 - (1 + stabilityFee / 12 / 10**5)**monthsLeft);
-    return futureValueOfPrincipal;
-    // return
+    return 20295;
     //   principal *
     //     ((principal + homePrice) / ((1 + (stabilityFee / 12 / 10**3))**monthsLeft - 1)) *
     //     (stabilityFee / 12);
@@ -146,7 +146,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     uint256 stabilityFee,
     uint256 monthsLeft,
     uint256 principal
-  ) external pure returns (uint256) {
+  ) external pure returns (uint) {
     return calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
   }
 
@@ -157,4 +157,5 @@ contract MonthlyPaymentsCalculator is Ownable {
   {
     return calculateBufferPayment(homePrice, stabilityFee);
   }
+  
 }

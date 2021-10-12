@@ -38,7 +38,7 @@ describe('MonthlyPaymentsCalculatorABI', () => {
 
   describe('#calculate principal payment', () => {
     it('should return correct value', async () => {
-      expect(await monthlyPaymentsCalculator.testCalculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, 1000)).to.equal(20295000);
+      expect(await monthlyPaymentsCalculator.testCalculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal)).to.equal(20295);
     });
   });
 

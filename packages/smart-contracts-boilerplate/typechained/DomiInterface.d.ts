@@ -12,20 +12,26 @@ import {
   BaseContract,
   ContractTransaction,
   CallOverrides,
-} from 'ethers';
-import { BytesLike } from '@ethersproject/bytes';
-import { Listener, Provider } from '@ethersproject/providers';
-import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
+} from "ethers";
+import { BytesLike } from "@ethersproject/bytes";
+import { Listener, Provider } from "@ethersproject/providers";
+import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
+import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface DomiInterfaceInterface extends ethers.utils.Interface {
   functions: {
-    'getStabilityFee()': FunctionFragment;
+    "getStabilityFee()": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: 'getStabilityFee', values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "getStabilityFee",
+    values?: undefined
+  ): string;
 
-  decodeFunctionResult(functionFragment: 'getStabilityFee', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getStabilityFee",
+    data: BytesLike
+  ): Result;
 
   events: {};
 }
@@ -54,7 +60,9 @@ export class DomiInterface extends BaseContract {
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
     listener: TypedListener<EventArgsArray, EventArgsObject>
   ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): this;
 
   listeners(eventName?: string): Array<Listener>;
   off(eventName: string, listener: Listener): this;
@@ -72,7 +80,9 @@ export class DomiInterface extends BaseContract {
   interface: DomiInterfaceInterface;
 
   functions: {
-    getStabilityFee(overrides?: CallOverrides): Promise<[BigNumber] & { stabilityFee: BigNumber }>;
+    getStabilityFee(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { stabilityFee: BigNumber }>;
   };
 
   getStabilityFee(overrides?: CallOverrides): Promise<BigNumber>;
