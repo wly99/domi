@@ -2,9 +2,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Signer, utils, Contract, ContractFactory, Overrides } from "ethers";
-import { Provider, TransactionRequest } from "@ethersproject/providers";
-import type { Collector, CollectorInterface } from "../Collector";
+import { Signer, utils, Contract, ContractFactory, Overrides } from 'ethers';
+import { Provider, TransactionRequest } from '@ethersproject/providers';
+import type { Collector, CollectorInterface } from '../Collector';
 
 const _abi = [
   {
@@ -12,103 +12,99 @@ const _abi = [
     inputs: [
       {
         indexed: true,
-        internalType: "address",
-        name: "previousOwner",
-        type: "address",
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
       },
       {
         indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
       },
     ],
-    name: "OwnershipTransferred",
-    type: "event",
+    name: 'OwnershipTransferred',
+    type: 'event',
   },
   {
     inputs: [],
-    name: "isOwner",
+    name: 'isOwner',
     outputs: [
       {
-        internalType: "bool",
-        name: "",
-        type: "bool",
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
       },
     ],
-    stateMutability: "view",
-    type: "function",
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [],
-    name: "owner",
+    name: 'owner',
     outputs: [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
+        internalType: 'address',
+        name: '',
+        type: 'address',
       },
     ],
-    stateMutability: "view",
-    type: "function",
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [],
-    name: "renounceOwnership",
+    name: 'renounceOwnership',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
+        internalType: 'address',
+        name: '',
+        type: 'address',
       },
     ],
-    name: "renterToHome",
+    name: 'renterToHome',
     outputs: [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
       },
     ],
-    stateMutability: "view",
-    type: "function",
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
       },
     ],
-    name: "transferOwnership",
+    name: 'transferOwnership',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
 ];
 
 const _bytecode =
-  "0x608060405234801561001057600080fd5b50600080546001600160a01b03191633178082556040516001600160a01b039190911691907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a3610289806100696000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c8063715018a61461005c5780638da5cb5b146100665780638f32d59b14610084578063e13c6a7014610099578063f2fde38b146100b9575b600080fd5b6100646100cc565b005b61006e6100e9565b60405161007b91906101e5565b60405180910390f35b61008c6100f8565b60405161007b91906101f9565b6100ac6100a73660046101b7565b610109565b60405161007b919061024a565b6100646100c73660046101b7565b61011b565b6100d46100f8565b6100dd57600080fd5b6100e76000610167565b565b6000546001600160a01b031690565b6000546001600160a01b0316331490565b60016020526000908152604090205481565b6101236100f8565b61012c57600080fd5b6001600160a01b03811661015b5760405162461bcd60e51b815260040161015290610204565b60405180910390fd5b61016481610167565b50565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6000602082840312156101c8578081fd5b81356001600160a01b03811681146101de578182fd5b9392505050565b6001600160a01b0391909116815260200190565b901515815260200190565b60208082526026908201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160408201526564647265737360d01b606082015260800190565b9081526020019056fea264697066735822122015967e793a173ec6aceab43ae77b5ac180206884a8f780c496d83bd06f2433d664736f6c63430008000033";
+  '0x608060405234801561001057600080fd5b50600080546001600160a01b03191633178082556040516001600160a01b039190911691907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a3610289806100696000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c8063715018a61461005c5780638da5cb5b146100665780638f32d59b14610084578063e13c6a7014610099578063f2fde38b146100b9575b600080fd5b6100646100cc565b005b61006e6100e9565b60405161007b91906101e5565b60405180910390f35b61008c6100f8565b60405161007b91906101f9565b6100ac6100a73660046101b7565b610109565b60405161007b919061024a565b6100646100c73660046101b7565b61011b565b6100d46100f8565b6100dd57600080fd5b6100e76000610167565b565b6000546001600160a01b031690565b6000546001600160a01b0316331490565b60016020526000908152604090205481565b6101236100f8565b61012c57600080fd5b6001600160a01b03811661015b5760405162461bcd60e51b815260040161015290610204565b60405180910390fd5b61016481610167565b50565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6000602082840312156101c8578081fd5b81356001600160a01b03811681146101de578182fd5b9392505050565b6001600160a01b0391909116815260200190565b901515815260200190565b60208082526026908201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160408201526564647265737360d01b606082015260800190565b9081526020019056fea264697066735822122015967e793a173ec6aceab43ae77b5ac180206884a8f780c496d83bd06f2433d664736f6c63430008000033';
 
 export class Collector__factory extends ContractFactory {
   constructor(signer?: Signer) {
     super(_abi, _bytecode, signer);
   }
 
-  deploy(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<Collector> {
+  deploy(overrides?: Overrides & { from?: string | Promise<string> }): Promise<Collector> {
     return super.deploy(overrides || {}) as Promise<Collector>;
   }
-  getDeployTransaction(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): TransactionRequest {
+  getDeployTransaction(overrides?: Overrides & { from?: string | Promise<string> }): TransactionRequest {
     return super.getDeployTransaction(overrides || {});
   }
   attach(address: string): Collector {
@@ -122,10 +118,7 @@ export class Collector__factory extends ContractFactory {
   static createInterface(): CollectorInterface {
     return new utils.Interface(_abi) as CollectorInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): Collector {
+  static connect(address: string, signerOrProvider: Signer | Provider): Collector {
     return new Contract(address, _abi, signerOrProvider) as Collector;
   }
 }

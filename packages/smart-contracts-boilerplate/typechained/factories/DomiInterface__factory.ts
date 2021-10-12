@@ -2,23 +2,23 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from "ethers";
-import { Provider } from "@ethersproject/providers";
-import type { DomiInterface, DomiInterfaceInterface } from "../DomiInterface";
+import { Contract, Signer, utils } from 'ethers';
+import { Provider } from '@ethersproject/providers';
+import type { DomiInterface, DomiInterfaceInterface } from '../DomiInterface';
 
 const _abi = [
   {
     inputs: [],
-    name: "getStabilityFee",
+    name: 'getStabilityFee',
     outputs: [
       {
-        internalType: "uint256",
-        name: "stabilityFee",
-        type: "uint256",
+        internalType: 'uint256',
+        name: 'stabilityFee',
+        type: 'uint256',
       },
     ],
-    stateMutability: "view",
-    type: "function",
+    stateMutability: 'view',
+    type: 'function',
   },
 ];
 
@@ -27,10 +27,7 @@ export class DomiInterface__factory {
   static createInterface(): DomiInterfaceInterface {
     return new utils.Interface(_abi) as DomiInterfaceInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): DomiInterface {
+  static connect(address: string, signerOrProvider: Signer | Provider): DomiInterface {
     return new Contract(address, _abi, signerOrProvider) as DomiInterface;
   }
 }

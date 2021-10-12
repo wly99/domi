@@ -48,7 +48,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     view
     returns (
       uint256,
-      uint,
+      uint256,
       uint256
     )
   {
@@ -63,7 +63,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     principal = principalContract.getPrincipal(homeId, renterAddress);
 
     uint256 stabilityFeePayment;
-    uint principalPayment;
+    uint256 principalPayment;
     uint256 bufferPayment;
     stabilityFeePayment = calculateStabilityFeePayment(homePrice, stabilityFee);
     principalPayment = calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
@@ -87,7 +87,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     uint256 stabilityFee,
     uint256 monthsLeft,
     uint256 principal
-  ) private pure returns (uint) {
+  ) private pure returns (uint256) {
     // PMT = PV x ((PV + FV) ÷ ((1 + r)^n-1)) x (-r ÷ (1 + b))
     // PV or “Present Value” is the value of the principal
     // FV or “Future Value” is the value of the homePrice.
@@ -146,7 +146,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     uint256 stabilityFee,
     uint256 monthsLeft,
     uint256 principal
-  ) external pure returns (uint) {
+  ) external pure returns (uint256) {
     return calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
   }
 
@@ -157,5 +157,4 @@ contract MonthlyPaymentsCalculator is Ownable {
   {
     return calculateBufferPayment(homePrice, stabilityFee);
   }
-  
 }
