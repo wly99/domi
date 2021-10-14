@@ -27,9 +27,9 @@ abstract contract PrincipalInterface {
 }
 
 contract MonthlyPaymentsCalculator is Ownable {
-  DomiInterface domiContract;
-  HomeContractsInterface homeContractsContract;
-  PrincipalInterface principalContract;
+  DomiInterface public domiContract;
+  HomeContractsInterface public homeContractsContract;
+  PrincipalInterface public principalContract;
 
   function setDomiContractAddress(address _address) external onlyOwner {
     domiContract = DomiInterface(_address);
@@ -65,13 +65,13 @@ contract MonthlyPaymentsCalculator is Ownable {
     uint256 stabilityFeePayment;
     uint256 principalPayment;
     uint256 bufferPayment;
-    stabilityFeePayment = calculateStabilityFeePayment(homePrice, stabilityFee);
-    principalPayment = calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
-    bufferPayment = calculateBufferPayment(homePrice, stabilityFee);
+    stabilityFeePayment = _calculateStabilityFeePayment(homePrice, stabilityFee);
+    principalPayment = _calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
+    bufferPayment = _calculateBufferPayment(homePrice, stabilityFee);
     return (stabilityFeePayment, principalPayment, bufferPayment);
   }
 
-  function calculateStabilityFeePayment(uint256 homePrice, uint256 stabilityFee)
+  function _calculateStabilityFeePayment(uint256 homePrice, uint256 stabilityFee)
     private
     pure
     returns (uint256)
@@ -81,7 +81,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     return (homePrice * stabilityFee) / 12 / 10**3 + 1;
   }
 
-  function calculatePrincipalPayment(
+  function _calculatePrincipalPayment(
     // TODO fix bug
     uint256 homePrice,
     uint256 stabilityFee,
@@ -102,13 +102,14 @@ contract MonthlyPaymentsCalculator is Ownable {
     //uint256 futureValueOfPrincipal = principal * (1 + stabilityFee / 12 / 10**5)**monthsLeft;
     // uint256 futureValueOfPrincipal = principal * (1 + stabilityFee / 12)**monthsLeft;
     // return (homePrice - futureValueOfPrincipal) / (1 - (1 + stabilityFee / 12 / 10**5)**monthsLeft);
+    homePrice + stabilityFee + monthsLeft + principal;
     return 20295;
     //   principal *
     //     ((principal + homePrice) / ((1 + (stabilityFee / 12 / 10**3))**monthsLeft - 1)) *
     //     (stabilityFee / 12);
   }
 
-  function calculateBufferPayment(uint256 homePrice, uint256 stabilityFee)
+  function _calculateBufferPayment(uint256 homePrice, uint256 stabilityFee)
     private
     pure
     returns (uint256)
@@ -125,7 +126,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     }
   }
 
-  function max(uint256 a, uint256 b) internal pure returns (uint256) {
+  function _max(uint256 a, uint256 b) internal pure returns (uint256) {
     return a >= b ? a : b;
   }
 
@@ -138,7 +139,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     pure
     returns (uint256)
   {
-    return calculateStabilityFeePayment(homePrice, stabilityFee);
+    return _calculateStabilityFeePayment(homePrice, stabilityFee);
   }
 
   function testCalculatePrincipalPayment(
@@ -147,7 +148,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     uint256 monthsLeft,
     uint256 principal
   ) external pure returns (uint256) {
-    return calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
+    return _calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
   }
 
   function testCalculateBufferPayment(uint256 homePrice, uint256 stabilityFee)
@@ -155,6 +156,6 @@ contract MonthlyPaymentsCalculator is Ownable {
     pure
     returns (uint256)
   {
-    return calculateBufferPayment(homePrice, stabilityFee);
+    return _calculateBufferPayment(homePrice, stabilityFee);
   }
 }

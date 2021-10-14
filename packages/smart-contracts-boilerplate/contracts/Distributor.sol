@@ -11,7 +11,14 @@ abstract contract DomiInterface {
 }
 
 contract Distributor is Ownable {
-  DomiInterface domiContract;
+  uint256 public lastDistributed;
+  address[] public domiHolders;
+  DomiInterface public domiContract;
+  mapping(address => uint256) public balances;
+
+  constructor() {
+    lastDistributed = block.timestamp;
+  }
 
   function setDomiContractAddress(address _address) external onlyOwner {
     domiContract = DomiInterface(_address);
@@ -24,5 +31,20 @@ contract Distributor is Ownable {
       return true;
     }
     return false;
+  }
+
+  function distribute() external onlyOwner {
+    require(
+      block.timestamp - 28 days >= lastDistributed,
+      'Wait at least 28 days'
+    );
+    uint256 stabilityFee = domiContract.getStabilityFee();
+    uint256 totalSupply = domiContract.getTotalSupply();
+    uint256 totalStabilityFeesOwed = totalSupply * stabilityFee;
+    require(totalStabilityFeesOwed <= domiContract.balanceOf(address(this)), 'Insufficient stability fees');
+    // uint256 numDomiHolders = domiHolders.length;
+    // for (uint256 i = 0; i < numDomiHolders; i++) {
+    //   // TODO transfer(address(this), domiHolders[i], balances[domiHolders[i]] / totalSupply * totalStabilityFeesOwed);
+    // }
   }
 }

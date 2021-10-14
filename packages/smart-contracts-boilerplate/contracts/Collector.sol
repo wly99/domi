@@ -26,10 +26,10 @@ abstract contract ReservesInterface {
 }
 
 contract Collector is Ownable {
-  MonthlyPaymentsCalculatorInterface monthlyPaymentsCalculatorContract;
-  DistributorInterface distributorContract;
-  PrincipalInterface principalContract;
-  ReservesInterface reservesContract;
+  MonthlyPaymentsCalculatorInterface public monthlyPaymentsCalculatorContract;
+  DistributorInterface public distributorContract;
+  PrincipalInterface public principalContract;
+  ReservesInterface public reservesContract;
 
   function setMonthlyPaymentsCalculatorContractAddress(address _address) external onlyOwner {
     monthlyPaymentsCalculatorContract = MonthlyPaymentsCalculatorInterface(_address);

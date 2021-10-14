@@ -38,7 +38,7 @@ abstract contract Ownable {
    * @dev Throws if called by any account other than the owner.
    */
   modifier onlyOwner() {
-    require(isOwner());
+    require(isOwner(), 'Only owner can access');
     _;
   }
 
@@ -65,7 +65,7 @@ abstract contract Ownable {
    * Can only be called by the current owner.
    */
   function transferOwnership(address newOwner) public virtual onlyOwner {
-    require(newOwner != address(0), 'Ownable: new owner is the zero address');
+    require(newOwner != address(0), 'New owner is the zero address');
     _transferOwnership(newOwner);
   }
 
