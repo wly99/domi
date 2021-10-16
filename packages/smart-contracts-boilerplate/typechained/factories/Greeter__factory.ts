@@ -42,6 +42,7 @@ const _abi = [
     ],
     name: 'GreetingUpdated',
     type: 'event',
+
   },
   {
     inputs: [],

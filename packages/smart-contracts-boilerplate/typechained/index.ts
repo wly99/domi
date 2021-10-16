@@ -16,3 +16,4 @@ export { HomeContractsInterface__factory } from './factories/HomeContractsInterf
 export { MonthlyPaymentsCalculator__factory } from './factories/MonthlyPaymentsCalculator__factory';
 export { PrincipalInterface__factory } from './factories/PrincipalInterface__factory';
 export { Ownable__factory } from './factories/Ownable__factory';
+export type { Greeter } from './Greeter';
