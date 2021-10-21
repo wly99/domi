@@ -11,7 +11,7 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
-  Overrides,
+  PayableOverrides,
   CallOverrides,
 } from 'ethers';
 import { BytesLike } from '@ethersproject/bytes';
@@ -34,8 +34,20 @@ interface GreeterInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: 'greeting', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setGreeting', data: BytesLike): Result;
 
-  events: {};
+  events: {
+    'GreetingUpdated(string,address,uint256)': EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: 'GreetingUpdated'): EventFragment;
 }
+
+export type GreetingUpdatedEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    _new: string;
+    setter: string;
+    amount: BigNumber;
+  }
+>;
 
 export class Greeter extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -83,14 +95,14 @@ export class Greeter extends BaseContract {
 
     greeting(overrides?: CallOverrides): Promise<[string]>;
 
-    setGreeting(_greeting: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
+    setGreeting(_greeting: string, overrides?: PayableOverrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
   };
 
   greet(overrides?: CallOverrides): Promise<string>;
 
   greeting(overrides?: CallOverrides): Promise<string>;
 
-  setGreeting(_greeting: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
+  setGreeting(_greeting: string, overrides?: PayableOverrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   callStatic: {
     greet(overrides?: CallOverrides): Promise<string>;
@@ -100,14 +112,26 @@ export class Greeter extends BaseContract {
     setGreeting(_greeting: string, overrides?: CallOverrides): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    'GreetingUpdated(string,address,uint256)'(
+      _new?: null,
+      setter?: null,
+      amount?: null
+    ): TypedEventFilter<[string, string, BigNumber], { _new: string; setter: string; amount: BigNumber }>;
+
+    GreetingUpdated(
+      _new?: null,
+      setter?: null,
+      amount?: null
+    ): TypedEventFilter<[string, string, BigNumber], { _new: string; setter: string; amount: BigNumber }>;
+  };
 
   estimateGas: {
     greet(overrides?: CallOverrides): Promise<BigNumber>;
 
     greeting(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setGreeting(_greeting: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
+    setGreeting(_greeting: string, overrides?: PayableOverrides & { from?: string | Promise<string> }): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -115,6 +139,6 @@ export class Greeter extends BaseContract {
 
     greeting(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    setGreeting(_greeting: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
+    setGreeting(_greeting: string, overrides?: PayableOverrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
   };
 }
