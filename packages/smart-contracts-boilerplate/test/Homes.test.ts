@@ -51,4 +51,13 @@ describe('Homes', () => {
       expect(await homes.minted(1)).to.equal(false);
     });
   });
+
+  describe('4. Confirm unconfirmed home with homeId #1', () => {
+    it('Should return true after home is confirmed', async () => {
+      await homes.addHome(homes.address, 'Orchard', 510212, 30, false);
+      expect(await homes.minted(1)).to.equal(false);
+      await homes.confirmHome(1, homes.address);
+      expect(await homes.minted(1)).to.equal(true);
+    });
+  });
 });

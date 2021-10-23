@@ -42,18 +42,23 @@ contract Homes {
     if (confirmed) {
       // domi.mintWithHome(currentOwnerAddress, homeId, home.price);
       home.minted = true;
-      homes[home.homeId] = home;
     } else {
       home.minted = false;
       unconfirmedHomes[home.homeId] = home;
     }
+    homes[home.homeId] = home;
   }
 
-  // function currentOwnerSign(uint homeId, address currentOwnerAddress) public {
-  //     // domi.mintWithHome(currentOwnerAddress, homeId, home.price);
-  // }
+  function confirmHome(uint256 homeId, address currentOwnerAddress) public {
+    if (homes[homeId].homeOwnerAddress != currentOwnerAddress)
+      revert('Home owner address does not tally with owner address in contract');
+    if (homes[homeId].minted == true) revert('Home already minted');
+    // domi.mintWithHome(currentOwnerAddress, homeId, home.price);
+    delete unconfirmedHomes[homeId];
+    homes[homeId].minted = true;
+  }
 
-  function deleteHome(uint homeId) public {
+  function deleteHome(uint256 homeId) public {
     homeCount -= 1;
     delete homes[homeId];
   }
