@@ -25,7 +25,13 @@ contract Homes {
     HomePriceCalculator homePriceCalculator = new HomePriceCalculator();
   }
 
-  function addHome(address currentOwnerAddress, string memory streetName, uint postalCode, uint lease, bool confirmed) public {
+  function addHome(
+    address currentOwnerAddress,
+    string memory streetName,
+    uint256 postalCode,
+    uint256 lease,
+    bool confirmed
+  ) public {
     homeCount += 1;
     Home memory home;
     home.homeId = homeCount; // TODO: Add homeId logic (map to unique house address/postal & country)
@@ -34,12 +40,12 @@ contract Homes {
     home.postalCode = postalCode;
     home.lease = lease;
     if (confirmed) {
-        // domi.mintWithHome(currentOwnerAddress, homeId, home.price);
-        home.minted = true;
-        homes[home.homeId] = home;
+      // domi.mintWithHome(currentOwnerAddress, homeId, home.price);
+      home.minted = true;
+      homes[home.homeId] = home;
     } else {
-        home.minted = false;
-        unconfirmedHomes[home.homeId] = home;
+      home.minted = false;
+      unconfirmedHomes[home.homeId] = home;
     }
   }
 
@@ -52,23 +58,19 @@ contract Homes {
   //     return true;
   // }
 
-  function minted(uint homeId) public view returns (bool) {
-    // TODO: Change checking logic
-    if (homes[homeId].homeId == homeId) {
-        return true;
-    }
-    return false;
+  function minted(uint256 homeId) public view returns (bool) {
+    return homes[homeId].minted;
   }
 
   function getHomeCount() public view returns (uint256) {
     return homeCount;
-  } 
+  }
 
   // function getHome(address currentOwnerAddress) public returns (Home memory) {
   //     return home;
   // }
 
-  // function generateHomeId(uint postalCode) public returns (uint) {
+  // function generateHomeId(string memory streetName, uint postalCode) internal returns (uint) {
 
   // }
 }
