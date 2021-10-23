@@ -53,10 +53,10 @@ contract Homes {
   //     // domi.mintWithHome(currentOwnerAddress, homeId, home.price);
   // }
 
-  // function deleteHome(uint homeId) public returns (bool) {
-  //     delete homes[homeId];
-  //     return true;
-  // }
+  function deleteHome(uint homeId) public {
+    homeCount -= 1;
+    delete homes[homeId];
+  }
 
   function minted(uint256 homeId) public view returns (bool) {
     return homes[homeId].minted;

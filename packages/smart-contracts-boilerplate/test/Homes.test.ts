@@ -14,28 +14,41 @@ describe('Homes', () => {
     homes = await homesFactory.deploy();
   });
 
-  describe('1. Add new confirmed home', () => {
-    it('Should return true when home is added', async () => {
-      await homes.addHome(homes.address, "Orchard", 510212, 30, true);
-      expect(await homes.minted(0)).to.equal(true);
+  describe('1. Add new confirmed home with homeId #1', () => {
+    it('Should return true when home #1 is added', async () => {
+      await homes.addHome(homes.address, 'Orchard', 510212, 30, true);
+      expect(await homes.minted(1)).to.equal(true);
+    });
+
+    it('Should return false when home #2 is queried', async () => {
+      await homes.addHome(homes.address, 'Orchard', 510212, 30, true);
+      expect(await homes.minted(2)).to.equal(false);
     });
 
     it('Should return homeCount equal to 1', async () => {
-      await homes.addHome(homes.address, "Orchard", 510212, 30, true);
+      await homes.addHome(homes.address, 'Orchard', 510212, 30, true);
       expect(await homes.getHomeCount()).to.equal(1);
     });
   });
 
-  // describe('2. Adding new unconfirmed home', () => {
-  //   it('Should return false when home is added', async () => {
-  //     await homes.addHome(homes.address, "Orchard", 510212, 30, false);
-  //     expect(await homes.minted(0)).to.equal(false);
-  //   });
+  describe('2. Adding new unconfirmed home', () => {
+    it('Should return false when home is added', async () => {
+      await homes.addHome(homes.address, 'Orchard', 510212, 30, false);
+      expect(await homes.minted(1)).to.equal(false);
+    });
 
-  //   it('Should return homeCount equal to 0', async () => {
-  //     await homes.addHome(homes.address, "Orchard", 510212, 30, false);
-  //     expect(await homes.getHomeCount()).to.equal(0);
-  //   });
-  // });
+    it('Should return homeCount equal to 1', async () => {
+      await homes.addHome(homes.address, 'Orchard', 510212, 30, false);
+      expect(await homes.getHomeCount()).to.equal(1);
+    });
+  });
 
+  describe('3. Delete confirmed home with homeId #1', () => {
+    it('Should return false after home is deleted', async () => {
+      await homes.addHome(homes.address, 'Orchard', 510212, 30, true);
+      expect(await homes.minted(1)).to.equal(true);
+      await homes.deleteHome(1);
+      expect(await homes.minted(1)).to.equal(false);
+    });
+  });
 });
