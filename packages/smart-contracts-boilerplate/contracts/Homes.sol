@@ -12,6 +12,7 @@ struct Home {
   uint256 postalCode;
   uint256 lease;
   bool minted;
+  bool rented;
 }
 
 contract Homes {
@@ -29,7 +30,6 @@ contract Homes {
     address currentOwnerAddress,
     string memory streetName,
     uint256 postalCode,
-    uint256 lease,
     bool confirmed
   ) public {
     Home memory home;
@@ -37,7 +37,6 @@ contract Homes {
     home.homeOwnerAddress = currentOwnerAddress;
     home.streetName = streetName;
     home.postalCode = postalCode;
-    home.lease = lease;
     if (confirmed) {
       // domi.mintWithHome(currentOwnerAddress, homeId, home.price);
       homeCount += 1;
@@ -80,4 +79,28 @@ contract Homes {
   {
     return keccak256(abi.encodePacked(streetName, postalCode));
   }
+
+  // function renterSign(bytes32 homeId, address renterAddress) public {
+    
+  // }
+
+  // function schedulePayments(bytes32 homeId) public {
+
+  // }
+
+  // function recordMonthlyPayment(bytes32 homeId, uint amount) public {
+
+  // }
+
+  // function terminateContract(bytes32 homeId) public {
+
+  // }
+
+  // function transferHome(bytes32 homeId) public {
+
+  // }
+
+  // function paymentMissed(bytes32 homeId) public {
+
+  // }
 }
