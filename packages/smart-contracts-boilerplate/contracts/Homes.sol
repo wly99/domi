@@ -5,7 +5,7 @@ import './HomePriceCalculator.sol';
 // import './Domi.sol';
 
 struct Home {
-  uint256 homeId;
+  bytes32 homeId;
   address renterAddress;
   address homeOwnerAddress;
   string streetName;
@@ -17,8 +17,8 @@ struct Home {
 contract Homes {
   // Domi public domi;
   uint256 homeCount;
-  mapping(uint256 => Home) public homes;
-  mapping(uint256 => Home) public unconfirmedHomes;
+  mapping(bytes32 => Home) public homes;
+  mapping(bytes32 => Home) public unconfirmedHomes;
 
   constructor() public {
     // domi = new Domi();
@@ -32,15 +32,15 @@ contract Homes {
     uint256 lease,
     bool confirmed
   ) public {
-    homeCount += 1;
     Home memory home;
-    home.homeId = homeCount; // TODO: Add homeId logic (map to unique house address/postal & country)
+    home.homeId = generateHomeId(streetName, postalCode);
     home.homeOwnerAddress = currentOwnerAddress;
     home.streetName = streetName;
     home.postalCode = postalCode;
     home.lease = lease;
     if (confirmed) {
       // domi.mintWithHome(currentOwnerAddress, homeId, home.price);
+      homeCount += 1;
       home.minted = true;
     } else {
       home.minted = false;
@@ -49,21 +49,23 @@ contract Homes {
     homes[home.homeId] = home;
   }
 
-  function confirmHome(uint256 homeId, address currentOwnerAddress) public {
+  function confirmHome(bytes32 homeId, address currentOwnerAddress) public {
     if (homes[homeId].homeOwnerAddress != currentOwnerAddress)
       revert('Home owner address does not tally with owner address in contract');
     if (homes[homeId].minted == true) revert('Home already minted');
     // domi.mintWithHome(currentOwnerAddress, homeId, home.price);
     delete unconfirmedHomes[homeId];
     homes[homeId].minted = true;
+    homeCount += 1;
   }
 
-  function deleteHome(uint256 homeId) public {
+  function deleteHome(bytes32 homeId) public {
+    if (homes[homeId].minted == false) revert('Home not minted yet');
     homeCount -= 1;
     delete homes[homeId];
   }
 
-  function minted(uint256 homeId) public view returns (bool) {
+  function minted(bytes32 homeId) public view returns (bool) {
     return homes[homeId].minted;
   }
 
@@ -71,11 +73,11 @@ contract Homes {
     return homeCount;
   }
 
-  // function getHome(address currentOwnerAddress) public returns (Home memory) {
-  //     return home;
-  // }
-
-  // function generateHomeId(string memory streetName, uint postalCode) internal returns (uint) {
-
-  // }
+  function generateHomeId(string memory streetName, uint256 postalCode)
+    public
+    pure
+    returns (bytes32)
+  {
+    return keccak256(abi.encodePacked(streetName, postalCode));
+  }
 }
