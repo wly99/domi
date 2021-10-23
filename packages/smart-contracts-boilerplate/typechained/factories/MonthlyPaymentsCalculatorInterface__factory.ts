@@ -5,9 +5,9 @@
 import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
 import type {
-  HomeContractsInterface,
-  HomeContractsInterfaceInterface,
-} from "../HomeContractsInterface";
+  MonthlyPaymentsCalculatorInterface,
+  MonthlyPaymentsCalculatorInterfaceInterface,
+} from "../MonthlyPaymentsCalculatorInterface";
 
 const _abi = [
   {
@@ -17,43 +17,50 @@ const _abi = [
         name: "homeId",
         type: "uint256",
       },
+      {
+        internalType: "address",
+        name: "renterAddress",
+        type: "address",
+      },
     ],
-    name: "getDetails",
+    name: "calculatePayment",
     outputs: [
       {
         internalType: "uint256",
-        name: "homePrice",
+        name: "",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "monthsPaid",
+        name: "",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "term",
+        name: "",
         type: "uint256",
       },
     ],
-    stateMutability: "view",
+    stateMutability: "nonpayable",
     type: "function",
   },
 ];
 
-export class HomeContractsInterface__factory {
+export class MonthlyPaymentsCalculatorInterface__factory {
   static readonly abi = _abi;
-  static createInterface(): HomeContractsInterfaceInterface {
-    return new utils.Interface(_abi) as HomeContractsInterfaceInterface;
+  static createInterface(): MonthlyPaymentsCalculatorInterfaceInterface {
+    return new utils.Interface(
+      _abi
+    ) as MonthlyPaymentsCalculatorInterfaceInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): HomeContractsInterface {
+  ): MonthlyPaymentsCalculatorInterface {
     return new Contract(
       address,
       _abi,
       signerOrProvider
-    ) as HomeContractsInterface;
+    ) as MonthlyPaymentsCalculatorInterface;
   }
 }

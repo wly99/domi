@@ -102,11 +102,10 @@ contract MonthlyPaymentsCalculator is Ownable {
     //uint256 futureValueOfPrincipal = principal * (1 + stabilityFee / 12 / 10**5)**monthsLeft;
     // uint256 futureValueOfPrincipal = principal * (1 + stabilityFee / 12)**monthsLeft;
     // return (homePrice - futureValueOfPrincipal) / (1 - (1 + stabilityFee / 12 / 10**5)**monthsLeft);
-    homePrice + stabilityFee + monthsLeft + principal;
-    return 20295;
-    //   principal *
-    //     ((principal + homePrice) / ((1 + (stabilityFee / 12 / 10**3))**monthsLeft - 1)) *
-    //     (stabilityFee / 12);
+    uint futureValueOfPrincipal = compound(principal, monthsLeft, stabilityFee);
+    uint shortfall = homePrice - futureValueOfPrincipal;
+    uint pmt = shortfall * stabilityFee / 12 / (1 - 1 / (1 + stabilityFee / 12)**(monthsLeft));
+    return pmt;
   }
 
   function _calculateBufferPayment(uint256 homePrice, uint256 stabilityFee)
@@ -132,6 +131,15 @@ contract MonthlyPaymentsCalculator is Ownable {
 
   function min(uint256 a, uint256 b) external pure returns (uint256) {
     return a <= b ? a : b;
+  }
+
+  // assumes principal has 10 decimals, rate has 5 decimals. Rounds down.
+  // returns in 2 decimals
+  function compound(uint256 principal, uint timePeriods, uint rate) public pure returns (uint){
+    for (uint i = 0; i < timePeriods; i++) {
+      principal += principal * rate / 12 / 10**5;
+    }
+    return principal / 10**3;
   }
 
   function testCalculateStabilityFeePayment(uint256 homePrice, uint256 stabilityFee)

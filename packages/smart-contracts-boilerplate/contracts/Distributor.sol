@@ -47,4 +47,5 @@ contract Distributor is Ownable {
     //   // TODO transfer(address(this), domiHolders[i], balances[domiHolders[i]] / totalSupply * totalStabilityFeesOwed);
     // }
   }
+
 }

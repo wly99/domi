@@ -19,29 +19,74 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface OwnableInterface extends ethers.utils.Interface {
+interface PrincipalInterface extends ethers.utils.Interface {
   functions: {
+    "domiContract()": FunctionFragment;
     "isOwner()": FunctionFragment;
     "owner()": FunctionFragment;
+    "principalBalances(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "reservesContract()": FunctionFragment;
+    "setDomiContractAddress(address)": FunctionFragment;
+    "setReservesContractAddress(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "domiContract",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "isOwner", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "principalBalances",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "reservesContract",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setDomiContractAddress",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setReservesContractAddress",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "domiContract",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "isOwner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "principalBalances",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "reservesContract",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setDomiContractAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setReservesContractAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -50,17 +95,29 @@ interface OwnableInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
+    "ClaimRestOfPenalty(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "PenaltyPaid(address,address,uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "ClaimRestOfPenalty"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PenaltyPaid"): EventFragment;
 }
+
+export type ClaimRestOfPenaltyEvent = TypedEvent<
+  [string, BigNumber] & { renterAddress: string; balanceOwed: BigNumber }
+>;
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
 >;
 
-export class Ownable extends BaseContract {
+export type PenaltyPaidEvent = TypedEvent<
+  [string, string, BigNumber] & { from: string; to: string; tokens: BigNumber }
+>;
+
+export class Principal extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -101,14 +158,33 @@ export class Ownable extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: OwnableInterface;
+  interface: PrincipalInterface;
 
   functions: {
+    domiContract(overrides?: CallOverrides): Promise<[string]>;
+
     isOwner(overrides?: CallOverrides): Promise<[boolean]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
+    principalBalances(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    reservesContract(overrides?: CallOverrides): Promise<[string]>;
+
+    setDomiContractAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setReservesContractAddress(
+      _address: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -118,11 +194,30 @@ export class Ownable extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  domiContract(overrides?: CallOverrides): Promise<string>;
+
   isOwner(overrides?: CallOverrides): Promise<boolean>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
+  principalBalances(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   renounceOwnership(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  reservesContract(overrides?: CallOverrides): Promise<string>;
+
+  setDomiContractAddress(
+    _address: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setReservesContractAddress(
+    _address: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -132,11 +227,30 @@ export class Ownable extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    domiContract(overrides?: CallOverrides): Promise<string>;
+
     isOwner(overrides?: CallOverrides): Promise<boolean>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
+    principalBalances(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    reservesContract(overrides?: CallOverrides): Promise<string>;
+
+    setDomiContractAddress(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setReservesContractAddress(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     transferOwnership(
       newOwner: string,
@@ -145,6 +259,22 @@ export class Ownable extends BaseContract {
   };
 
   filters: {
+    "ClaimRestOfPenalty(address,uint256)"(
+      renterAddress?: null,
+      balanceOwed?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { renterAddress: string; balanceOwed: BigNumber }
+    >;
+
+    ClaimRestOfPenalty(
+      renterAddress?: null,
+      balanceOwed?: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { renterAddress: string; balanceOwed: BigNumber }
+    >;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null
@@ -160,14 +290,51 @@ export class Ownable extends BaseContract {
       [string, string],
       { previousOwner: string; newOwner: string }
     >;
+
+    "PenaltyPaid(address,address,uint256)"(
+      from?: null,
+      to?: null,
+      tokens?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { from: string; to: string; tokens: BigNumber }
+    >;
+
+    PenaltyPaid(
+      from?: null,
+      to?: null,
+      tokens?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { from: string; to: string; tokens: BigNumber }
+    >;
   };
 
   estimateGas: {
+    domiContract(overrides?: CallOverrides): Promise<BigNumber>;
+
     isOwner(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
+    principalBalances(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    reservesContract(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setDomiContractAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setReservesContractAddress(
+      _address: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -178,11 +345,30 @@ export class Ownable extends BaseContract {
   };
 
   populateTransaction: {
+    domiContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     isOwner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    principalBalances(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    reservesContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setDomiContractAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setReservesContractAddress(
+      _address: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

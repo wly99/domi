@@ -11,6 +11,7 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
+  PayableOverrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -18,22 +19,25 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface HomeContractsInterfaceInterface extends ethers.utils.Interface {
+interface ReservesInterfaceInterface extends ethers.utils.Interface {
   functions: {
-    "getDetails(uint256)": FunctionFragment;
+    "transferBuffer(uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "getDetails",
+    functionFragment: "transferBuffer",
     values: [BigNumberish]
   ): string;
 
-  decodeFunctionResult(functionFragment: "getDetails", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "transferBuffer",
+    data: BytesLike
+  ): Result;
 
   events: {};
 }
 
-export class HomeContractsInterface extends BaseContract {
+export class ReservesInterface extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -74,58 +78,40 @@ export class HomeContractsInterface extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: HomeContractsInterfaceInterface;
+  interface: ReservesInterfaceInterface;
 
   functions: {
-    getDetails(
-      homeId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        homePrice: BigNumber;
-        monthsPaid: BigNumber;
-        term: BigNumber;
-      }
-    >;
+    transferBuffer(
+      amount: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
-  getDetails(
-    homeId: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
-      homePrice: BigNumber;
-      monthsPaid: BigNumber;
-      term: BigNumber;
-    }
-  >;
+  transferBuffer(
+    amount: BigNumberish,
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
-    getDetails(
-      homeId: BigNumberish,
+    transferBuffer(
+      amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        homePrice: BigNumber;
-        monthsPaid: BigNumber;
-        term: BigNumber;
-      }
-    >;
+    ): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
-    getDetails(
-      homeId: BigNumberish,
-      overrides?: CallOverrides
+    transferBuffer(
+      amount: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    getDetails(
-      homeId: BigNumberish,
-      overrides?: CallOverrides
+    transferBuffer(
+      amount: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

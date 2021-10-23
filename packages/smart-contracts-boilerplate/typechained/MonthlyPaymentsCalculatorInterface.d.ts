@@ -11,6 +11,7 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
+  Overrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -18,22 +19,26 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface HomeContractsInterfaceInterface extends ethers.utils.Interface {
+interface MonthlyPaymentsCalculatorInterfaceInterface
+  extends ethers.utils.Interface {
   functions: {
-    "getDetails(uint256)": FunctionFragment;
+    "calculatePayment(uint256,address)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "getDetails",
-    values: [BigNumberish]
+    functionFragment: "calculatePayment",
+    values: [BigNumberish, string]
   ): string;
 
-  decodeFunctionResult(functionFragment: "getDetails", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "calculatePayment",
+    data: BytesLike
+  ): Result;
 
   events: {};
 }
 
-export class HomeContractsInterface extends BaseContract {
+export class MonthlyPaymentsCalculatorInterface extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -74,58 +79,45 @@ export class HomeContractsInterface extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: HomeContractsInterfaceInterface;
+  interface: MonthlyPaymentsCalculatorInterfaceInterface;
 
   functions: {
-    getDetails(
+    calculatePayment(
       homeId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        homePrice: BigNumber;
-        monthsPaid: BigNumber;
-        term: BigNumber;
-      }
-    >;
+      renterAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
-  getDetails(
+  calculatePayment(
     homeId: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
-      homePrice: BigNumber;
-      monthsPaid: BigNumber;
-      term: BigNumber;
-    }
-  >;
+    renterAddress: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
-    getDetails(
+    calculatePayment(
       homeId: BigNumberish,
+      renterAddress: string,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        homePrice: BigNumber;
-        monthsPaid: BigNumber;
-        term: BigNumber;
-      }
-    >;
+    ): Promise<[BigNumber, BigNumber, BigNumber]>;
   };
 
   filters: {};
 
   estimateGas: {
-    getDetails(
+    calculatePayment(
       homeId: BigNumberish,
-      overrides?: CallOverrides
+      renterAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    getDetails(
+    calculatePayment(
       homeId: BigNumberish,
-      overrides?: CallOverrides
+      renterAddress: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

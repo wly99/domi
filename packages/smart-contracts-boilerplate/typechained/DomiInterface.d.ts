@@ -12,20 +12,38 @@ import {
   BaseContract,
   ContractTransaction,
   CallOverrides,
-} from 'ethers';
-import { BytesLike } from '@ethersproject/bytes';
-import { Listener, Provider } from '@ethersproject/providers';
-import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
+} from "ethers";
+import { BytesLike } from "@ethersproject/bytes";
+import { Listener, Provider } from "@ethersproject/providers";
+import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
+import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface DomiInterfaceInterface extends ethers.utils.Interface {
   functions: {
-    'getStabilityFee()': FunctionFragment;
+    "balanceOf(address)": FunctionFragment;
+    "getStabilityFee()": FunctionFragment;
+    "getTotalSupply()": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: 'getStabilityFee', values?: undefined): string;
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "getStabilityFee",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getTotalSupply",
+    values?: undefined
+  ): string;
 
-  decodeFunctionResult(functionFragment: 'getStabilityFee', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getStabilityFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getTotalSupply",
+    data: BytesLike
+  ): Result;
 
   events: {};
 }
@@ -54,7 +72,9 @@ export class DomiInterface extends BaseContract {
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
     listener: TypedListener<EventArgsArray, EventArgsObject>
   ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): this;
 
   listeners(eventName?: string): Array<Listener>;
   off(eventName: string, listener: Listener): this;
@@ -72,22 +92,49 @@ export class DomiInterface extends BaseContract {
   interface: DomiInterfaceInterface;
 
   functions: {
-    getStabilityFee(overrides?: CallOverrides): Promise<[BigNumber] & { stabilityFee: BigNumber }>;
+    balanceOf(whom: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getStabilityFee(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { stabilityFee: BigNumber }>;
+
+    getTotalSupply(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { totalSupply: BigNumber }>;
   };
+
+  balanceOf(whom: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   getStabilityFee(overrides?: CallOverrides): Promise<BigNumber>;
 
+  getTotalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
   callStatic: {
+    balanceOf(whom: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     getStabilityFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getTotalSupply(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   filters: {};
 
   estimateGas: {
+    balanceOf(whom: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     getStabilityFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getTotalSupply(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    balanceOf(
+      whom: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getStabilityFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getTotalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
