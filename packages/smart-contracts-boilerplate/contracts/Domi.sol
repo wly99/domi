@@ -39,10 +39,7 @@ contract DomiToken is ERC20, Ownable {
   function distribute() external onlyOwner {
     require(block.timestamp - 28 days >= lastDistributed, 'Wait at least 28 days');
     uint256 totalStabilityFeesOwed = totalSupply() * stabilityFee;
-    require(
-      totalStabilityFeesOwed <= balanceOf(address(this)),
-      'Insufficient stability fees'
-    );
+    require(totalStabilityFeesOwed <= balanceOf(address(this)), 'Insufficient stability fees');
     // uint256 numDomiHolders = domiHolders.length;
     // for (uint256 i = 0; i < numDomiHolders; i++) {
     //   // TODO transfer(address(this), domiHolders[i], balances[domiHolders[i]] / totalSupply * totalStabilityFeesOwed);

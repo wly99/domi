@@ -54,16 +54,15 @@ describe('MonthlyPaymentsCalculatorABI', () => {
 
   describe('#calculate future value', () => {
     it('should return correct value for small principal', async () => {
-      expect(await monthlyPaymentsCalculator.compound(100*10**5, 30, stabilityFee)).to.equal(10512);
+      expect(await monthlyPaymentsCalculator.compound(100 * 10 ** 5, 30, stabilityFee)).to.equal(10512);
     });
 
     it('should return correct value for big principal', async () => {
-      expect(await monthlyPaymentsCalculator.compound(1000000*10**5, 30, stabilityFee)).to.equal(105122734);
+      expect(await monthlyPaymentsCalculator.compound(1000000 * 10 ** 5, 30, stabilityFee)).to.equal(105122734);
     });
 
     it('should return correct value for big principal and long time period', async () => {
-      expect(await monthlyPaymentsCalculator.compound(1000000*10**5, 360, stabilityFee)).to.equal(182120897);
+      expect(await monthlyPaymentsCalculator.compound(1000000 * 10 ** 5, 360, stabilityFee)).to.equal(182120897);
     });
   });
-
 });

@@ -12,23 +12,20 @@ import {
   BaseContract,
   ContractTransaction,
   CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
+} from 'ethers';
+import { BytesLike } from '@ethersproject/bytes';
+import { Listener, Provider } from '@ethersproject/providers';
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface HomeContractsInterfaceInterface extends ethers.utils.Interface {
   functions: {
-    "getDetails(uint256)": FunctionFragment;
+    'getDetails(uint256)': FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "getDetails",
-    values: [BigNumberish]
-  ): string;
+  encodeFunctionData(functionFragment: 'getDetails', values: [BigNumberish]): string;
 
-  decodeFunctionResult(functionFragment: "getDetails", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getDetails', data: BytesLike): Result;
 
   events: {};
 }
@@ -57,9 +54,7 @@ export class HomeContractsInterface extends BaseContract {
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
     listener: TypedListener<EventArgsArray, EventArgsObject>
   ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>): this;
 
   listeners(eventName?: string): Array<Listener>;
   off(eventName: string, listener: Listener): this;
@@ -116,16 +111,10 @@ export class HomeContractsInterface extends BaseContract {
   filters: {};
 
   estimateGas: {
-    getDetails(
-      homeId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getDetails(homeId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    getDetails(
-      homeId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getDetails(homeId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

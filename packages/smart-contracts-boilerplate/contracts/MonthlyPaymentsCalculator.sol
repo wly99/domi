@@ -102,9 +102,11 @@ contract MonthlyPaymentsCalculator is Ownable {
     //uint256 futureValueOfPrincipal = principal * (1 + stabilityFee / 12 / 10**5)**monthsLeft;
     // uint256 futureValueOfPrincipal = principal * (1 + stabilityFee / 12)**monthsLeft;
     // return (homePrice - futureValueOfPrincipal) / (1 - (1 + stabilityFee / 12 / 10**5)**monthsLeft);
-    uint futureValueOfPrincipal = compound(principal, monthsLeft, stabilityFee);
-    uint shortfall = homePrice - futureValueOfPrincipal;
-    uint pmt = shortfall * stabilityFee / 12 / (1 - 1 / (1 + stabilityFee / 12)**(monthsLeft));
+    uint256 futureValueOfPrincipal = compound(principal, monthsLeft, stabilityFee);
+    uint256 shortfall = homePrice - futureValueOfPrincipal;
+    uint256 pmt = (shortfall * stabilityFee) /
+      12 /
+      (1 - 1 / (1 + stabilityFee / 12)**(monthsLeft));
     return pmt;
   }
 
@@ -135,9 +137,13 @@ contract MonthlyPaymentsCalculator is Ownable {
 
   // assumes principal has 10 decimals, rate has 5 decimals. Rounds down.
   // returns in 2 decimals
-  function compound(uint256 principal, uint timePeriods, uint rate) public pure returns (uint){
-    for (uint i = 0; i < timePeriods; i++) {
-      principal += principal * rate / 12 / 10**5;
+  function compound(
+    uint256 principal,
+    uint256 timePeriods,
+    uint256 rate
+  ) public pure returns (uint256) {
+    for (uint256 i = 0; i < timePeriods; i++) {
+      principal += (principal * rate) / 12 / 10**5;
     }
     return principal / 10**3;
   }
