@@ -13,38 +13,52 @@ import {
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from 'ethers';
-import { BytesLike } from '@ethersproject/bytes';
-import { Listener, Provider } from '@ethersproject/providers';
-import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
+} from "ethers";
+import { BytesLike } from "@ethersproject/bytes";
+import { Listener, Provider } from "@ethersproject/providers";
+import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
+import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface OwnableInterface extends ethers.utils.Interface {
   functions: {
-    'isOwner()': FunctionFragment;
-    'owner()': FunctionFragment;
-    'renounceOwnership()': FunctionFragment;
-    'transferOwnership(address)': FunctionFragment;
+    "isOwner()": FunctionFragment;
+    "owner()": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: 'isOwner', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'renounceOwnership', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'transferOwnership', values: [string]): string;
+  encodeFunctionData(functionFragment: "isOwner", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [string]
+  ): string;
 
-  decodeFunctionResult(functionFragment: 'isOwner', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'renounceOwnership', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'transferOwnership', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isOwner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
 
   events: {
-    'OwnershipTransferred(address,address)': EventFragment;
+    "OwnershipTransferred(address,address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 }
 
-export type OwnershipTransferredEvent = TypedEvent<[string, string] & { previousOwner: string; newOwner: string }>;
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string] & { previousOwner: string; newOwner: string }
+>;
 
 export class Ownable extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -70,7 +84,9 @@ export class Ownable extends BaseContract {
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
     listener: TypedListener<EventArgsArray, EventArgsObject>
   ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): this;
 
   listeners(eventName?: string): Array<Listener>;
   off(eventName: string, listener: Listener): this;
@@ -92,18 +108,28 @@ export class Ownable extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
-    transferOwnership(newOwner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   isOwner(overrides?: CallOverrides): Promise<boolean>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
-  renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
+  renounceOwnership(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
-  transferOwnership(newOwner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
+  transferOwnership(
+    newOwner: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
     isOwner(overrides?: CallOverrides): Promise<boolean>;
@@ -112,19 +138,28 @@ export class Ownable extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    transferOwnership(newOwner: string, overrides?: CallOverrides): Promise<void>;
+    transferOwnership(
+      newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
-    'OwnershipTransferred(address,address)'(
+    "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null
-    ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
 
     OwnershipTransferred(
       previousOwner?: string | null,
       newOwner?: string | null
-    ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
   };
 
   estimateGas: {
@@ -132,9 +167,14 @@ export class Ownable extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
-    transferOwnership(newOwner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -142,8 +182,13 @@ export class Ownable extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
-    transferOwnership(newOwner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
   };
 }
