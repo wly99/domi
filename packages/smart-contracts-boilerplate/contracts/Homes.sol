@@ -80,9 +80,11 @@ contract Homes {
     return keccak256(abi.encodePacked(streetName, postalCode));
   }
 
-  // function renterSign(bytes32 homeId, address renterAddress) public {
-    
-  // }
+  function renterSign(bytes32 homeId, address renterAddress, uint lease) public {
+    homes[homeId].rented = true;
+    homes[homeId].lease = lease;
+    homes[homeId].renterAddress = renterAddress;
+  }
 
   // function schedulePayments(bytes32 homeId) public {
 
