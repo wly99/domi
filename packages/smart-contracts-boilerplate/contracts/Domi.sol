@@ -68,10 +68,7 @@ contract DomiToken is ERC20, Ownable {
     // last address. Then when fn reads the balance of his last address, he will get paid
     // again despite only having the same amount of tokens
     uint256 totalSavingsRateOwed = totalSupply() * savingsRate;
-    require(
-      totalSavingsRateOwed <= balanceOf(address(this)),
-      'Insufficient to pay savings rate'
-    );
+    require(totalSavingsRateOwed <= balanceOf(address(this)), 'Insufficient to pay savings rate');
     uint256 numDomiHolders = _domiHolders.length;
     for (uint256 i = 0; i < numDomiHolders; i++) {
       // if recipient is principal contract, let it update its balances first before transferring
