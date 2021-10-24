@@ -22,17 +22,13 @@ describe('MonthlyPaymentsCalculatorABI', () => {
     monthlyPaymentsCalculator = await waffle.loadFixture(fixture);
   });
 
-  it('Initalize with correct min value', async () => {
-    expect(await monthlyPaymentsCalculator.min(1, 2)).to.equal(1);
-  });
-
   describe('#calculate stability fee payment', () => {
     it('should return correct value', async () => {
-      expect(await monthlyPaymentsCalculator.testCalculateStabilityFeePayment(homePrice, stabilityFee)).to.equal(16667);
+      expect(await monthlyPaymentsCalculator.testCalculatesavingsRatePayment(homePrice, stabilityFee)).to.equal(16667);
     });
 
     it('should return 1 if stabilityFee is 0', async () => {
-      expect(await monthlyPaymentsCalculator.testCalculateStabilityFeePayment(homePrice, 0)).to.equal(1);
+      expect(await monthlyPaymentsCalculator.testCalculatesavingsRatePayment(homePrice, 0)).to.equal(1);
     });
   });
 

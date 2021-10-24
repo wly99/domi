@@ -35,8 +35,10 @@ interface DomiTokenInterface extends ethers.utils.Interface {
     'name()': FunctionFragment;
     'numOfHolders()': FunctionFragment;
     'owner()': FunctionFragment;
+    'principalContract()': FunctionFragment;
     'renounceOwnership()': FunctionFragment;
     'savingsRate()': FunctionFragment;
+    'setPrincipalContractAddress(address)': FunctionFragment;
     'symbol()': FunctionFragment;
     'totalSupply()': FunctionFragment;
     'transfer(address,uint256)': FunctionFragment;
@@ -59,8 +61,10 @@ interface DomiTokenInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: 'name', values?: undefined): string;
   encodeFunctionData(functionFragment: 'numOfHolders', values?: undefined): string;
   encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'principalContract', values?: undefined): string;
   encodeFunctionData(functionFragment: 'renounceOwnership', values?: undefined): string;
   encodeFunctionData(functionFragment: 'savingsRate', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'setPrincipalContractAddress', values: [string]): string;
   encodeFunctionData(functionFragment: 'symbol', values?: undefined): string;
   encodeFunctionData(functionFragment: 'totalSupply', values?: undefined): string;
   encodeFunctionData(functionFragment: 'transfer', values: [string, BigNumberish]): string;
@@ -82,8 +86,10 @@ interface DomiTokenInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'numOfHolders', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'principalContract', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'renounceOwnership', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'savingsRate', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setPrincipalContractAddress', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'totalSupply', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'transfer', data: BytesLike): Result;
@@ -192,9 +198,13 @@ export class DomiToken extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
+    principalContract(overrides?: CallOverrides): Promise<[string]>;
+
     renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     savingsRate(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    setPrincipalContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
@@ -255,9 +265,13 @@ export class DomiToken extends BaseContract {
 
   owner(overrides?: CallOverrides): Promise<string>;
 
+  principalContract(overrides?: CallOverrides): Promise<string>;
+
   renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   savingsRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+  setPrincipalContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -310,9 +324,13 @@ export class DomiToken extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<string>;
 
+    principalContract(overrides?: CallOverrides): Promise<string>;
+
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     savingsRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setPrincipalContractAddress(_address: string, overrides?: CallOverrides): Promise<void>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -400,9 +418,13 @@ export class DomiToken extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
+    principalContract(overrides?: CallOverrides): Promise<BigNumber>;
+
     renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     savingsRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setPrincipalContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -464,9 +486,13 @@ export class DomiToken extends BaseContract {
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    principalContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     savingsRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setPrincipalContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

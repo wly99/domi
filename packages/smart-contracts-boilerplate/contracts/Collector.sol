@@ -13,12 +13,22 @@ abstract contract MonthlyPaymentsCalculatorInterface {
     );
 }
 
-abstract contract DistributorInterface {
-  function transferStabilityFee(uint256 amount) external payable virtual;
+abstract contract DomiInterface {
+  function transferTokens(
+    address sender,
+    address recipient,
+    uint256 amount
+  ) external payable virtual;
+
+  function transferTokensToPrincipalContract(
+    address renterAddress,
+    address principalContractAddress,
+    uint256 amount
+  ) external virtual;
 }
 
 abstract contract PrincipalInterface {
-  function transferPrincipal(uint256 amount) external payable virtual;
+  function transferPrincipal(address renterAddress, uint256 amount) external payable virtual;
 }
 
 abstract contract ReservesInterface {
@@ -27,7 +37,7 @@ abstract contract ReservesInterface {
 
 contract Collector is Ownable {
   MonthlyPaymentsCalculatorInterface public monthlyPaymentsCalculatorContract;
-  DistributorInterface public distributorContract;
+  DomiInterface public domiContract;
   PrincipalInterface public principalContract;
   ReservesInterface public reservesContract;
 
@@ -35,8 +45,8 @@ contract Collector is Ownable {
     monthlyPaymentsCalculatorContract = MonthlyPaymentsCalculatorInterface(_address);
   }
 
-  function setDistributorContractAddress(address _address) external onlyOwner {
-    distributorContract = DistributorInterface(_address);
+  function setDomiContractAddress(address _address) external onlyOwner {
+    domiContract = DomiInterface(_address);
   }
 
   function setPrincipalContractAddress(address _address) external onlyOwner {
@@ -53,13 +63,13 @@ contract Collector is Ownable {
   }
 
   struct MonthlyPayment {
-    uint256 stabilityFee;
+    uint256 savingsRate;
     uint256 principal;
     uint256 buffer;
   }
 
   mapping(address => uint256) public renterToHome; // maps renter's public address to homeId
-  mapping(address => MonthlyPayment) public renterToMonthlyPayment; // monthly payment consisting of stabilityFee+principal+buffer that renter has to pay next
+  mapping(address => MonthlyPayment) public renterToMonthlyPayment; // monthly payment consisting of savingsRate+principal+buffer that renter has to pay next
   mapping(address => PaymentHistory[]) public paymentsMade; // history of payments made by renter
   mapping(address => PaymentHistory[]) public paymentsMissed; // history of missed payments
 
@@ -77,16 +87,29 @@ contract Collector is Ownable {
   }
 
   function payMonthlyPayments(address renterAddress, uint256 amount) external payable {
-    uint256 totalPayable = renterToMonthlyPayment[renterAddress].stabilityFee +
+    uint256 totalPayable = renterToMonthlyPayment[renterAddress].savingsRate +
       renterToMonthlyPayment[renterAddress].principal +
       renterToMonthlyPayment[renterAddress].buffer;
     require(amount >= totalPayable, 'Payment is insufficient');
     // TODO
     // If equal or more, inform HomeContract.sol of successful payment
     // If less, inform HomeContract.sol of unsuccessful payment
-    distributorContract.transferStabilityFee(renterToMonthlyPayment[renterAddress].stabilityFee);
-    principalContract.transferPrincipal(renterToMonthlyPayment[renterAddress].principal);
-    reservesContract.transferBuffer(renterToMonthlyPayment[renterAddress].buffer);
+    domiContract.transferTokens(
+      renterAddress,
+      address(domiContract),
+      renterToMonthlyPayment[renterAddress].savingsRate
+    );
+    principalContract.transferPrincipal(
+      renterAddress,
+      renterToMonthlyPayment[renterAddress].principal
+    );
+    domiContract.transferTokens(
+      renterAddress,
+      address(reservesContract),
+      renterToMonthlyPayment[renterAddress].buffer
+    );
     paymentsMade[renterAddress].push(PaymentHistory(block.timestamp, amount));
   }
+
+  // TODO check every month if renter has paid. If not paid within grace period add it as a missed payment
 }

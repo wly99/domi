@@ -4,7 +4,7 @@ import './Ownable.sol';
 import 'abdk-libraries-solidity/ABDKMath64x64.sol';
 
 abstract contract DomiInterface {
-  function getStabilityFee() external view virtual returns (uint256 stabilityFee);
+  function savingsRate() external view virtual returns (uint256 savingsRate);
 }
 
 abstract contract HomeContractsInterface {
@@ -56,70 +56,63 @@ contract MonthlyPaymentsCalculator is Ownable {
     uint256 homePrice;
     uint256 monthsPaid;
     uint256 term;
-    uint256 stabilityFee;
+    uint256 savingsRate;
     uint256 principal;
     (homePrice, monthsPaid, term) = homeContractsContract.getDetails(homeId);
     uint256 monthsLeft = term * 12 - monthsPaid;
-    stabilityFee = domiContract.getStabilityFee();
+    savingsRate = domiContract.savingsRate();
     principal = principalContract.getPrincipal(homeId, renterAddress);
 
-    uint256 stabilityFeePayment;
+    uint256 savingsRatePayment;
     uint256 principalPayment;
     uint256 bufferPayment;
-    stabilityFeePayment = _calculateStabilityFeePayment(homePrice, stabilityFee);
-    principalPayment = _calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
-    bufferPayment = _calculateBufferPayment(homePrice, stabilityFee);
-    return (stabilityFeePayment, principalPayment, bufferPayment);
+    savingsRatePayment = _calculateSavingsRatePayment(homePrice, savingsRate);
+    principalPayment = _calculatePrincipalPayment(homePrice, savingsRate, monthsLeft, principal);
+    bufferPayment = _calculateBufferPayment(homePrice, savingsRate);
+    return (savingsRatePayment, principalPayment, bufferPayment);
   }
 
-  function _calculateStabilityFeePayment(uint256 homePrice, uint256 stabilityFee)
+  function _calculateSavingsRatePayment(uint256 homePrice, uint256 savingsRate)
     private
     pure
     returns (uint256)
   {
     // +1 is to round up
     // need to divide 10^2 to get real value(still have not factored in decimals for Domi)
-    return (homePrice * stabilityFee) / 12 / 10**3 + 1;
+    return (homePrice * savingsRate) / 12 / 10**3 + 1;
   }
 
   function _calculatePrincipalPayment(
     // TODO fix bug
     uint256 homePrice,
-    uint256 stabilityFee,
+    uint256 savingsRate,
     uint256 monthsLeft,
     uint256 principal
   ) private pure returns (uint256) {
-    // uint256 futureValueOfPrincipal = compound(principal, monthsLeft, stabilityFee);
+    // uint256 futureValueOfPrincipal = compound(principal, monthsLeft, savingsRate);
     // uint256 shortfall = homePrice - futureValueOfPrincipal;
-    // uint256 payment = calculatePMT(stabilityFee, monthsLeft, principal, shortfall);
+    // uint256 payment = calculatePMT(savingsRate, monthsLeft, principal, shortfall);
     // return payment;
     // for now just naively divide homePrice by monthsLeft, will factor in compounding next time
+    savingsRate + principal;
     return homePrice / monthsLeft;
   }
 
-  function _calculateBufferPayment(uint256 homePrice, uint256 stabilityFee)
+  function _calculateBufferPayment(uint256 homePrice, uint256 savingsRate)
     private
     pure
     returns (uint256)
   {
     // Decimals = 2, need to divide 10^2 to get real value(still have not factored in decimals for Domi)
     // +1 is to round up
-    // max(0.001 / 12 * homePrice, 0.1 * stabilityFee / 12 * homePrice)
+    // max(0.001 / 12 * homePrice, 0.1 * savingsRate / 12 * homePrice)
     uint256 minBuffer = (100 * homePrice) / 12;
-    uint256 tenPercentBuffer = ((10000 * stabilityFee) / 12) * homePrice;
+    uint256 tenPercentBuffer = ((10000 * savingsRate) / 12) * homePrice;
     if (tenPercentBuffer >= minBuffer) {
       return tenPercentBuffer / 10**8 + 1;
     } else {
       return minBuffer / 10**3 + 1;
     }
-  }
-
-  function _max(uint256 a, uint256 b) internal pure returns (uint256) {
-    return a >= b ? a : b;
-  }
-
-  function min(uint256 a, uint256 b) external pure returns (uint256) {
-    return a <= b ? a : b;
   }
 
   // assumes principal has 10 decimals, rate has 5 decimals. Rounds down.
@@ -136,7 +129,7 @@ contract MonthlyPaymentsCalculator is Ownable {
   }
 
   function calculatePMT(
-    uint256 stabilityFee,
+    uint256 savingsRate,
     uint256 monthsLeft,
     uint256 principal,
     uint256 shortfall
@@ -144,7 +137,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     return
       ABDKMath64x64.toUInt(
         pmt(
-          ABDKMath64x64.fromUInt(stabilityFee),
+          ABDKMath64x64.fromUInt(savingsRate),
           ABDKMath64x64.fromUInt(monthsLeft),
           ABDKMath64x64.fromUInt(principal),
           ABDKMath64x64.fromUInt(shortfall)
@@ -193,28 +186,28 @@ contract MonthlyPaymentsCalculator is Ownable {
     //         ratePerPeriod))));
   }
 
-  function testCalculateStabilityFeePayment(uint256 homePrice, uint256 stabilityFee)
+  function testCalculatesavingsRatePayment(uint256 homePrice, uint256 savingsRate)
     external
     pure
     returns (uint256)
   {
-    return _calculateStabilityFeePayment(homePrice, stabilityFee);
+    return _calculateSavingsRatePayment(homePrice, savingsRate);
   }
 
   function testCalculatePrincipalPayment(
     uint256 homePrice,
-    uint256 stabilityFee,
+    uint256 savingsRate,
     uint256 monthsLeft,
     uint256 principal
   ) external pure returns (uint256) {
-    return _calculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal);
+    return _calculatePrincipalPayment(homePrice, savingsRate, monthsLeft, principal);
   }
 
-  function testCalculateBufferPayment(uint256 homePrice, uint256 stabilityFee)
+  function testCalculateBufferPayment(uint256 homePrice, uint256 savingsRate)
     external
     pure
     returns (uint256)
   {
-    return _calculateBufferPayment(homePrice, stabilityFee);
+    return _calculateBufferPayment(homePrice, savingsRate);
   }
 }

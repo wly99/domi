@@ -12,6 +12,7 @@ import {
   BaseContract,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   CallOverrides,
 } from 'ethers';
 import { BytesLike } from '@ethersproject/bytes';
@@ -21,36 +22,42 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface PrincipalInterface extends ethers.utils.Interface {
   functions: {
+    'distributeSavingsRate(uint256)': FunctionFragment;
     'domiContract()': FunctionFragment;
     'isOwner()': FunctionFragment;
     'owner()': FunctionFragment;
-    'principalBalances(address)': FunctionFragment;
     'renounceOwnership()': FunctionFragment;
     'reservesContract()': FunctionFragment;
+    'savingsRateLastDistributed()': FunctionFragment;
     'setDomiContractAddress(address)': FunctionFragment;
     'setReservesContractAddress(address)': FunctionFragment;
     'transferOwnership(address)': FunctionFragment;
+    'transferPrincipal(address,uint256)': FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: 'distributeSavingsRate', values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: 'domiContract', values?: undefined): string;
   encodeFunctionData(functionFragment: 'isOwner', values?: undefined): string;
   encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'principalBalances', values: [string]): string;
   encodeFunctionData(functionFragment: 'renounceOwnership', values?: undefined): string;
   encodeFunctionData(functionFragment: 'reservesContract', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'savingsRateLastDistributed', values?: undefined): string;
   encodeFunctionData(functionFragment: 'setDomiContractAddress', values: [string]): string;
   encodeFunctionData(functionFragment: 'setReservesContractAddress', values: [string]): string;
   encodeFunctionData(functionFragment: 'transferOwnership', values: [string]): string;
+  encodeFunctionData(functionFragment: 'transferPrincipal', values: [string, BigNumberish]): string;
 
+  decodeFunctionResult(functionFragment: 'distributeSavingsRate', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'domiContract', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'isOwner', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'principalBalances', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'renounceOwnership', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'reservesContract', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'savingsRateLastDistributed', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setDomiContractAddress', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setReservesContractAddress', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'transferOwnership', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'transferPrincipal', data: BytesLike): Result;
 
   events: {
     'ClaimRestOfPenalty(address,uint256)': EventFragment;
@@ -111,24 +118,34 @@ export class Principal extends BaseContract {
   interface: PrincipalInterface;
 
   functions: {
+    distributeSavingsRate(totalAmount: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
+
     domiContract(overrides?: CallOverrides): Promise<[string]>;
 
     isOwner(overrides?: CallOverrides): Promise<[boolean]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
-    principalBalances(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
-
     renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     reservesContract(overrides?: CallOverrides): Promise<[string]>;
+
+    savingsRateLastDistributed(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     setDomiContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     setReservesContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     transferOwnership(newOwner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
+
+    transferPrincipal(
+      renterAddress: string,
+      amount: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
+
+  distributeSavingsRate(totalAmount: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   domiContract(overrides?: CallOverrides): Promise<string>;
 
@@ -136,11 +153,11 @@ export class Principal extends BaseContract {
 
   owner(overrides?: CallOverrides): Promise<string>;
 
-  principalBalances(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
   renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   reservesContract(overrides?: CallOverrides): Promise<string>;
+
+  savingsRateLastDistributed(overrides?: CallOverrides): Promise<BigNumber>;
 
   setDomiContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
@@ -148,24 +165,34 @@ export class Principal extends BaseContract {
 
   transferOwnership(newOwner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
+  transferPrincipal(
+    renterAddress: string,
+    amount: BigNumberish,
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
+    distributeSavingsRate(totalAmount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
     domiContract(overrides?: CallOverrides): Promise<string>;
 
     isOwner(overrides?: CallOverrides): Promise<boolean>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
-    principalBalances(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     reservesContract(overrides?: CallOverrides): Promise<string>;
+
+    savingsRateLastDistributed(overrides?: CallOverrides): Promise<BigNumber>;
 
     setDomiContractAddress(_address: string, overrides?: CallOverrides): Promise<void>;
 
     setReservesContractAddress(_address: string, overrides?: CallOverrides): Promise<void>;
 
     transferOwnership(newOwner: string, overrides?: CallOverrides): Promise<void>;
+
+    transferPrincipal(renterAddress: string, amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -203,42 +230,58 @@ export class Principal extends BaseContract {
   };
 
   estimateGas: {
+    distributeSavingsRate(totalAmount: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
+
     domiContract(overrides?: CallOverrides): Promise<BigNumber>;
 
     isOwner(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    principalBalances(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
     renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     reservesContract(overrides?: CallOverrides): Promise<BigNumber>;
+
+    savingsRateLastDistributed(overrides?: CallOverrides): Promise<BigNumber>;
 
     setDomiContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     setReservesContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     transferOwnership(newOwner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
+
+    transferPrincipal(
+      renterAddress: string,
+      amount: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    distributeSavingsRate(totalAmount: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
+
     domiContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isOwner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    principalBalances(arg0: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     reservesContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    savingsRateLastDistributed(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setDomiContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     setReservesContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     transferOwnership(newOwner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
+
+    transferPrincipal(
+      renterAddress: string,
+      amount: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
   };
 }

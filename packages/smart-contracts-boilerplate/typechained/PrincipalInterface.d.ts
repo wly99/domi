@@ -11,6 +11,7 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
+  Overrides,
   CallOverrides,
 } from 'ethers';
 import { BytesLike } from '@ethersproject/bytes';
@@ -20,12 +21,12 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface PrincipalInterfaceInterface extends ethers.utils.Interface {
   functions: {
-    'getPrincipal(uint256,address)': FunctionFragment;
+    'distributeSavingsRate(uint256)': FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: 'getPrincipal', values: [BigNumberish, string]): string;
+  encodeFunctionData(functionFragment: 'distributeSavingsRate', values: [BigNumberish]): string;
 
-  decodeFunctionResult(functionFragment: 'getPrincipal', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'distributeSavingsRate', data: BytesLike): Result;
 
   events: {};
 }
@@ -72,22 +73,22 @@ export class PrincipalInterface extends BaseContract {
   interface: PrincipalInterfaceInterface;
 
   functions: {
-    getPrincipal(homeId: BigNumberish, renterAddress: string, overrides?: CallOverrides): Promise<[BigNumber] & { principal: BigNumber }>;
+    distributeSavingsRate(amount: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
   };
 
-  getPrincipal(homeId: BigNumberish, renterAddress: string, overrides?: CallOverrides): Promise<BigNumber>;
+  distributeSavingsRate(amount: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   callStatic: {
-    getPrincipal(homeId: BigNumberish, renterAddress: string, overrides?: CallOverrides): Promise<BigNumber>;
+    distributeSavingsRate(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
-    getPrincipal(homeId: BigNumberish, renterAddress: string, overrides?: CallOverrides): Promise<BigNumber>;
+    distributeSavingsRate(amount: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    getPrincipal(homeId: BigNumberish, renterAddress: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    distributeSavingsRate(amount: BigNumberish, overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
   };
 }

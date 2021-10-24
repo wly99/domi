@@ -22,7 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface CollectorInterface extends ethers.utils.Interface {
   functions: {
-    'distributorContract()': FunctionFragment;
+    'domiContract()': FunctionFragment;
     'getMonthlyPaymentAmount(uint256,address)': FunctionFragment;
     'isOwner()': FunctionFragment;
     'monthlyPaymentsCalculatorContract()': FunctionFragment;
@@ -35,14 +35,14 @@ interface CollectorInterface extends ethers.utils.Interface {
     'renterToHome(address)': FunctionFragment;
     'renterToMonthlyPayment(address)': FunctionFragment;
     'reservesContract()': FunctionFragment;
-    'setDistributorContractAddress(address)': FunctionFragment;
+    'setDomiContractAddress(address)': FunctionFragment;
     'setMonthlyPaymentsCalculatorContractAddress(address)': FunctionFragment;
     'setPrincipalContractAddress(address)': FunctionFragment;
     'setReservesContractAddress(address)': FunctionFragment;
     'transferOwnership(address)': FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: 'distributorContract', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'domiContract', values?: undefined): string;
   encodeFunctionData(functionFragment: 'getMonthlyPaymentAmount', values: [BigNumberish, string]): string;
   encodeFunctionData(functionFragment: 'isOwner', values?: undefined): string;
   encodeFunctionData(functionFragment: 'monthlyPaymentsCalculatorContract', values?: undefined): string;
@@ -55,13 +55,13 @@ interface CollectorInterface extends ethers.utils.Interface {
   encodeFunctionData(functionFragment: 'renterToHome', values: [string]): string;
   encodeFunctionData(functionFragment: 'renterToMonthlyPayment', values: [string]): string;
   encodeFunctionData(functionFragment: 'reservesContract', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'setDistributorContractAddress', values: [string]): string;
+  encodeFunctionData(functionFragment: 'setDomiContractAddress', values: [string]): string;
   encodeFunctionData(functionFragment: 'setMonthlyPaymentsCalculatorContractAddress', values: [string]): string;
   encodeFunctionData(functionFragment: 'setPrincipalContractAddress', values: [string]): string;
   encodeFunctionData(functionFragment: 'setReservesContractAddress', values: [string]): string;
   encodeFunctionData(functionFragment: 'transferOwnership', values: [string]): string;
 
-  decodeFunctionResult(functionFragment: 'distributorContract', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'domiContract', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'getMonthlyPaymentAmount', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'isOwner', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'monthlyPaymentsCalculatorContract', data: BytesLike): Result;
@@ -74,7 +74,7 @@ interface CollectorInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: 'renterToHome', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'renterToMonthlyPayment', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'reservesContract', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'setDistributorContractAddress', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'setDomiContractAddress', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setMonthlyPaymentsCalculatorContractAddress', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setPrincipalContractAddress', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setReservesContractAddress', data: BytesLike): Result;
@@ -131,7 +131,7 @@ export class Collector extends BaseContract {
   interface: CollectorInterface;
 
   functions: {
-    distributorContract(overrides?: CallOverrides): Promise<[string]>;
+    domiContract(overrides?: CallOverrides): Promise<[string]>;
 
     getMonthlyPaymentAmount(
       homeId: BigNumberish,
@@ -174,7 +174,7 @@ export class Collector extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber, BigNumber] & {
-        stabilityFee: BigNumber;
+        savingsRate: BigNumber;
         principal: BigNumber;
         buffer: BigNumber;
       }
@@ -182,7 +182,7 @@ export class Collector extends BaseContract {
 
     reservesContract(overrides?: CallOverrides): Promise<[string]>;
 
-    setDistributorContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
+    setDomiContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
     setMonthlyPaymentsCalculatorContractAddress(
       _address: string,
@@ -196,7 +196,7 @@ export class Collector extends BaseContract {
     transferOwnership(newOwner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
   };
 
-  distributorContract(overrides?: CallOverrides): Promise<string>;
+  domiContract(overrides?: CallOverrides): Promise<string>;
 
   getMonthlyPaymentAmount(
     homeId: BigNumberish,
@@ -239,7 +239,7 @@ export class Collector extends BaseContract {
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber, BigNumber] & {
-      stabilityFee: BigNumber;
+      savingsRate: BigNumber;
       principal: BigNumber;
       buffer: BigNumber;
     }
@@ -247,7 +247,7 @@ export class Collector extends BaseContract {
 
   reservesContract(overrides?: CallOverrides): Promise<string>;
 
-  setDistributorContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
+  setDomiContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   setMonthlyPaymentsCalculatorContractAddress(
     _address: string,
@@ -261,7 +261,7 @@ export class Collector extends BaseContract {
   transferOwnership(newOwner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   callStatic: {
-    distributorContract(overrides?: CallOverrides): Promise<string>;
+    domiContract(overrides?: CallOverrides): Promise<string>;
 
     getMonthlyPaymentAmount(homeId: BigNumberish, renterAddress: string, overrides?: CallOverrides): Promise<void>;
 
@@ -296,7 +296,7 @@ export class Collector extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber, BigNumber] & {
-        stabilityFee: BigNumber;
+        savingsRate: BigNumber;
         principal: BigNumber;
         buffer: BigNumber;
       }
@@ -304,7 +304,7 @@ export class Collector extends BaseContract {
 
     reservesContract(overrides?: CallOverrides): Promise<string>;
 
-    setDistributorContractAddress(_address: string, overrides?: CallOverrides): Promise<void>;
+    setDomiContractAddress(_address: string, overrides?: CallOverrides): Promise<void>;
 
     setMonthlyPaymentsCalculatorContractAddress(_address: string, overrides?: CallOverrides): Promise<void>;
 
@@ -328,7 +328,7 @@ export class Collector extends BaseContract {
   };
 
   estimateGas: {
-    distributorContract(overrides?: CallOverrides): Promise<BigNumber>;
+    domiContract(overrides?: CallOverrides): Promise<BigNumber>;
 
     getMonthlyPaymentAmount(
       homeId: BigNumberish,
@@ -362,7 +362,7 @@ export class Collector extends BaseContract {
 
     reservesContract(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setDistributorContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
+    setDomiContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
     setMonthlyPaymentsCalculatorContractAddress(
       _address: string,
@@ -377,7 +377,7 @@ export class Collector extends BaseContract {
   };
 
   populateTransaction: {
-    distributorContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    domiContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getMonthlyPaymentAmount(
       homeId: BigNumberish,
@@ -411,7 +411,7 @@ export class Collector extends BaseContract {
 
     reservesContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    setDistributorContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
+    setDomiContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
     setMonthlyPaymentsCalculatorContractAddress(
       _address: string,

@@ -13,10 +13,7 @@ declare module 'hardhat/types/runtime' {
     getContractFactory(name: 'IERC20Metadata', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IERC20Metadata__factory>;
     getContractFactory(name: 'IERC20', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IERC20__factory>;
     getContractFactory(name: 'Collector', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.Collector__factory>;
-    getContractFactory(
-      name: 'DistributorInterface',
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.DistributorInterface__factory>;
+    getContractFactory(name: 'DomiInterface', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.DomiInterface__factory>;
     getContractFactory(
       name: 'MonthlyPaymentsCalculatorInterface',
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -32,6 +29,10 @@ declare module 'hardhat/types/runtime' {
     getContractFactory(name: 'Distributor', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.Distributor__factory>;
     getContractFactory(name: 'DomiInterface', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.DomiInterface__factory>;
     getContractFactory(name: 'DomiToken', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.DomiToken__factory>;
+    getContractFactory(
+      name: 'PrincipalInterface',
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.PrincipalInterface__factory>;
     getContractFactory(name: 'Greeter', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.Greeter__factory>;
     getContractFactory(name: 'DomiInterface', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.DomiInterface__factory>;
     getContractFactory(
@@ -58,7 +59,7 @@ declare module 'hardhat/types/runtime' {
     getContractAt(name: 'IERC20Metadata', address: string, signer?: ethers.Signer): Promise<Contracts.IERC20Metadata>;
     getContractAt(name: 'IERC20', address: string, signer?: ethers.Signer): Promise<Contracts.IERC20>;
     getContractAt(name: 'Collector', address: string, signer?: ethers.Signer): Promise<Contracts.Collector>;
-    getContractAt(name: 'DistributorInterface', address: string, signer?: ethers.Signer): Promise<Contracts.DistributorInterface>;
+    getContractAt(name: 'DomiInterface', address: string, signer?: ethers.Signer): Promise<Contracts.DomiInterface>;
     getContractAt(
       name: 'MonthlyPaymentsCalculatorInterface',
       address: string,
@@ -69,6 +70,7 @@ declare module 'hardhat/types/runtime' {
     getContractAt(name: 'Distributor', address: string, signer?: ethers.Signer): Promise<Contracts.Distributor>;
     getContractAt(name: 'DomiInterface', address: string, signer?: ethers.Signer): Promise<Contracts.DomiInterface>;
     getContractAt(name: 'DomiToken', address: string, signer?: ethers.Signer): Promise<Contracts.DomiToken>;
+    getContractAt(name: 'PrincipalInterface', address: string, signer?: ethers.Signer): Promise<Contracts.PrincipalInterface>;
     getContractAt(name: 'Greeter', address: string, signer?: ethers.Signer): Promise<Contracts.Greeter>;
     getContractAt(name: 'DomiInterface', address: string, signer?: ethers.Signer): Promise<Contracts.DomiInterface>;
     getContractAt(name: 'HomeContractsInterface', address: string, signer?: ethers.Signer): Promise<Contracts.HomeContractsInterface>;
