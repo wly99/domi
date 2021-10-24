@@ -86,4 +86,3 @@ contract DomiToken is ERC20, Ownable {
       );
     }
   }
-}

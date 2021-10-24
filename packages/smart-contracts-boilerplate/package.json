@@ -12,7 +12,8 @@
     "test": "yarn compile && yarn hardhat test"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.3.2"
+    "@openzeppelin/contracts": "^4.3.2",
+    "abdk-libraries-solidity": "^3.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.2.0",
