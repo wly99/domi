@@ -6,7 +6,7 @@ import './Ownable.sol';
 contract DomiToken is ERC20, Ownable {
   address private _owner;
   address[] private _domiHolders;
-  mapping (address => bool) private _addressInitialized;
+  mapping(address => bool) private _addressInitialized;
   address private _recipient;
   uint256 public savingsRate;
   uint256 public lastDistributed;
@@ -50,7 +50,11 @@ contract DomiToken is ERC20, Ownable {
     require(totalSavingsRateOwed <= balanceOf(address(this)), 'Insufficient stability fees');
     uint256 numDomiHolders = _domiHolders.length;
     for (uint256 i = 0; i < numDomiHolders; i++) {
-      _transfer(address(this), _domiHolders[i], balanceOf(_domiHolders[i]) * totalSavingsRateOwed / totalSupply());
+      _transfer(
+        address(this),
+        _domiHolders[i],
+        (balanceOf(_domiHolders[i]) * totalSavingsRateOwed) / totalSupply()
+      );
     }
   }
 }

@@ -13,26 +13,20 @@ import {
   ContractTransaction,
   PayableOverrides,
   CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
+} from 'ethers';
+import { BytesLike } from '@ethersproject/bytes';
+import { Listener, Provider } from '@ethersproject/providers';
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface DistributorInterfaceInterface extends ethers.utils.Interface {
   functions: {
-    "transferStabilityFee(uint256)": FunctionFragment;
+    'transferStabilityFee(uint256)': FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "transferStabilityFee",
-    values: [BigNumberish]
-  ): string;
+  encodeFunctionData(functionFragment: 'transferStabilityFee', values: [BigNumberish]): string;
 
-  decodeFunctionResult(
-    functionFragment: "transferStabilityFee",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: 'transferStabilityFee', data: BytesLike): Result;
 
   events: {};
 }
@@ -61,9 +55,7 @@ export class DistributorInterface extends BaseContract {
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
     listener: TypedListener<EventArgsArray, EventArgsObject>
   ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>): this;
 
   listeners(eventName?: string): Array<Listener>;
   off(eventName: string, listener: Listener): this;
@@ -81,31 +73,19 @@ export class DistributorInterface extends BaseContract {
   interface: DistributorInterfaceInterface;
 
   functions: {
-    transferStabilityFee(
-      amount: BigNumberish,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    transferStabilityFee(amount: BigNumberish, overrides?: PayableOverrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
   };
 
-  transferStabilityFee(
-    amount: BigNumberish,
-    overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  transferStabilityFee(amount: BigNumberish, overrides?: PayableOverrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   callStatic: {
-    transferStabilityFee(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    transferStabilityFee(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
-    transferStabilityFee(
-      amount: BigNumberish,
-      overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    transferStabilityFee(amount: BigNumberish, overrides?: PayableOverrides & { from?: string | Promise<string> }): Promise<BigNumber>;
   };
 
   populateTransaction: {
