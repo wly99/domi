@@ -2,53 +2,65 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from 'ethers';
-import { Provider } from '@ethersproject/providers';
-import type { MonthlyPaymentsCalculatorInterface, MonthlyPaymentsCalculatorInterfaceInterface } from '../MonthlyPaymentsCalculatorInterface';
+import { Contract, Signer, utils } from "ethers";
+import { Provider } from "@ethersproject/providers";
+import type {
+  MonthlyPaymentsCalculatorInterface,
+  MonthlyPaymentsCalculatorInterfaceInterface,
+} from "../MonthlyPaymentsCalculatorInterface";
 
 const _abi = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'homeId',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "homeId",
+        type: "uint256",
       },
       {
-        internalType: 'address',
-        name: 'renterAddress',
-        type: 'address',
+        internalType: "address",
+        name: "renterAddress",
+        type: "address",
       },
     ],
-    name: 'calculatePayment',
+    name: "calculatePayment",
     outputs: [
       {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
       {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
       {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
 ];
 
 export class MonthlyPaymentsCalculatorInterface__factory {
   static readonly abi = _abi;
   static createInterface(): MonthlyPaymentsCalculatorInterfaceInterface {
-    return new utils.Interface(_abi) as MonthlyPaymentsCalculatorInterfaceInterface;
+    return new utils.Interface(
+      _abi
+    ) as MonthlyPaymentsCalculatorInterfaceInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): MonthlyPaymentsCalculatorInterface {
-    return new Contract(address, _abi, signerOrProvider) as MonthlyPaymentsCalculatorInterface;
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): MonthlyPaymentsCalculatorInterface {
+    return new Contract(
+      address,
+      _abi,
+      signerOrProvider
+    ) as MonthlyPaymentsCalculatorInterface;
   }
 }

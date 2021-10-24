@@ -1,6 +1,7 @@
 pragma solidity ^0.8.0;
 
 import './Ownable.sol';
+import 'abdk-libraries-solidity/ABDKMath64x64.sol';
 
 abstract contract DomiInterface {
   function getStabilityFee() external view virtual returns (uint256 stabilityFee);
@@ -88,26 +89,12 @@ contract MonthlyPaymentsCalculator is Ownable {
     uint256 monthsLeft,
     uint256 principal
   ) private pure returns (uint256) {
-    // PMT = PV x ((PV + FV) ÷ ((1 + r)^n-1)) x (-r ÷ (1 + b))
-    // PV or “Present Value” is the value of the principal
-    // FV or “Future Value” is the value of the homePrice.
-    // r or “Rate” is the stabilityFee divided by 12(months) used per compounding period.
-    // n or “Number of Periods” is the number of months of compounding (and payments) that occur.
-    // b or “Rate if Payments at the Beginning” if the payments occur at the end of each period, “b” = 0. If the payments occur at the beginning of each period, “b” = “r”.
-    // PMT or “Payment” is the regular payment each compounding period.
-    // ignore the - in -r as we want to return a positive number
-
-    // (x*10+5) / 10 is to round up
-    // need to divide 10^5 to get real value(still have not factored in decimals for Domi)
-    //uint256 futureValueOfPrincipal = principal * (1 + stabilityFee / 12 / 10**5)**monthsLeft;
-    // uint256 futureValueOfPrincipal = principal * (1 + stabilityFee / 12)**monthsLeft;
-    // return (homePrice - futureValueOfPrincipal) / (1 - (1 + stabilityFee / 12 / 10**5)**monthsLeft);
-    uint256 futureValueOfPrincipal = compound(principal, monthsLeft, stabilityFee);
-    uint256 shortfall = homePrice - futureValueOfPrincipal;
-    uint256 pmt = (shortfall * stabilityFee) /
-      12 /
-      (1 - 1 / (1 + stabilityFee / 12)**(monthsLeft));
-    return pmt;
+    // uint256 futureValueOfPrincipal = compound(principal, monthsLeft, stabilityFee);
+    // uint256 shortfall = homePrice - futureValueOfPrincipal;
+    // uint256 payment = calculatePMT(stabilityFee, monthsLeft, principal, shortfall);
+    // return payment;
+    // for now just naively divide homePrice by monthsLeft, will factor in compounding next time
+    return homePrice / monthsLeft;
   }
 
   function _calculateBufferPayment(uint256 homePrice, uint256 stabilityFee)
@@ -147,6 +134,50 @@ contract MonthlyPaymentsCalculator is Ownable {
     }
     return principal / 10**3;
   }
+
+  function calculatePMT(uint stabilityFee, uint monthsLeft, uint principal, uint shortfall) public pure returns (uint){
+    return ABDKMath64x64.toUInt(pmt(ABDKMath64x64.fromUInt(stabilityFee), 
+    ABDKMath64x64.fromUInt(monthsLeft), 
+    ABDKMath64x64.fromUInt(principal), ABDKMath64x64.fromUInt(shortfall)));
+  }
+
+  function pmt (
+  int128 ratePerPeriod, int128 numberOfPayments,
+  int128 presentValue, int128 futureValue) public pure returns (int128) {
+    ratePerPeriod = ratePerPeriod / ABDKMath64x64.fromUInt(12 * 10**5);
+    presentValue = ABDKMath64x64.neg(presentValue);
+
+    // annuity formula shortfall = PMT((1+ratePerPeriod)**numberOfPayments - 1) / ratePerPeriod
+    int128 firstPart = ABDKMath64x64.mul(futureValue, ratePerPeriod);
+    int128 secondPart = ABDKMath64x64.add(ABDKMath64x64.fromUInt(1), ratePerPeriod);
+    int128 thirdPart = ABDKMath64x64.pow(secondPart, ABDKMath64x64.toUInt(numberOfPayments));
+    int128 fourthPart = ABDKMath64x64.sub(thirdPart, ABDKMath64x64.fromUInt(1));
+    return ABDKMath64x64.div(firstPart, fourthPart);
+
+    // int128 q =
+    //   ABDKMath64x64.pow (
+    //     ABDKMath64x64.add (
+    //       0x10000000000000000,
+    //       ratePerPeriod),
+    //     ABDKMath64x64.toUInt (
+    //       numberOfPayments));
+    // return
+    //   ABDKMath64x64.neg(ABDKMath64x64.div (
+    //     ABDKMath64x64.mul (
+    //       ratePerPeriod,
+    //       ABDKMath64x64.add (
+    //         futureValue,
+    //         ABDKMath64x64.mul (
+    //           q,
+    //           presentValue))),
+    //     ABDKMath64x64.mul (
+    //       ABDKMath64x64.sub (
+    //         q,
+    //         0x10000000000000000),
+    //       ABDKMath64x64.add (
+    //         0x10000000000000000,
+    //         ratePerPeriod))));
+}
 
   function testCalculateStabilityFeePayment(uint256 homePrice, uint256 stabilityFee)
     external
