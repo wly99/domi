@@ -2,23 +2,26 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from 'ethers';
-import { Provider } from '@ethersproject/providers';
-import type { ReservesInterface, ReservesInterfaceInterface } from '../ReservesInterface';
+import { Contract, Signer, utils } from "ethers";
+import { Provider } from "@ethersproject/providers";
+import type {
+  ReservesInterface,
+  ReservesInterfaceInterface,
+} from "../ReservesInterface";
 
 const _abi = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
       },
     ],
-    name: 'transferBuffer',
+    name: "transferBuffer",
     outputs: [],
-    stateMutability: 'payable',
-    type: 'function',
+    stateMutability: "payable",
+    type: "function",
   },
 ];
 
@@ -27,7 +30,10 @@ export class ReservesInterface__factory {
   static createInterface(): ReservesInterfaceInterface {
     return new utils.Interface(_abi) as ReservesInterfaceInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): ReservesInterface {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): ReservesInterface {
     return new Contract(address, _abi, signerOrProvider) as ReservesInterface;
   }
 }
