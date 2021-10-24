@@ -135,15 +135,29 @@ contract MonthlyPaymentsCalculator is Ownable {
     return principal / 10**3;
   }
 
-  function calculatePMT(uint stabilityFee, uint monthsLeft, uint principal, uint shortfall) public pure returns (uint){
-    return ABDKMath64x64.toUInt(pmt(ABDKMath64x64.fromUInt(stabilityFee), 
-    ABDKMath64x64.fromUInt(monthsLeft), 
-    ABDKMath64x64.fromUInt(principal), ABDKMath64x64.fromUInt(shortfall)));
+  function calculatePMT(
+    uint256 stabilityFee,
+    uint256 monthsLeft,
+    uint256 principal,
+    uint256 shortfall
+  ) public pure returns (uint256) {
+    return
+      ABDKMath64x64.toUInt(
+        pmt(
+          ABDKMath64x64.fromUInt(stabilityFee),
+          ABDKMath64x64.fromUInt(monthsLeft),
+          ABDKMath64x64.fromUInt(principal),
+          ABDKMath64x64.fromUInt(shortfall)
+        )
+      );
   }
 
-  function pmt (
-  int128 ratePerPeriod, int128 numberOfPayments,
-  int128 presentValue, int128 futureValue) public pure returns (int128) {
+  function pmt(
+    int128 ratePerPeriod,
+    int128 numberOfPayments,
+    int128 presentValue,
+    int128 futureValue
+  ) public pure returns (int128) {
     ratePerPeriod = ratePerPeriod / ABDKMath64x64.fromUInt(12 * 10**5);
     presentValue = ABDKMath64x64.neg(presentValue);
 
@@ -177,7 +191,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     //       ABDKMath64x64.add (
     //         0x10000000000000000,
     //         ratePerPeriod))));
-}
+  }
 
   function testCalculateStabilityFeePayment(uint256 homePrice, uint256 stabilityFee)
     external
