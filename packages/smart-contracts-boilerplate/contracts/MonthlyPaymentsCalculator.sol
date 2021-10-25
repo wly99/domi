@@ -130,15 +130,19 @@ contract MonthlyPaymentsCalculator is Ownable {
     return principal / 10**3;
   }
 
-  function approximate(uint shortfall, uint monthsLeft, uint savingsRate) public pure returns (uint) {
+  function approximate(
+    uint256 shortfall,
+    uint256 monthsLeft,
+    uint256 savingsRate
+  ) public pure returns (uint256) {
     shortfall *= 1;
-    uint approx = shortfall / monthsLeft;
-    uint temp;
-    for (uint i = 0; i < 100 ; i++) {
+    uint256 approx = shortfall / monthsLeft;
+    uint256 temp;
+    for (uint256 i = 0; i < 100; i++) {
       temp = 0;
-      for (uint j = 0; j < monthsLeft; j++) {
+      for (uint256 j = 0; j < monthsLeft; j++) {
         temp += approx;
-        temp += temp * savingsRate / 12 / 10**5;
+        temp += (temp * savingsRate) / 12 / 10**5;
       }
       if (temp > shortfall) {
         approx -= 9;

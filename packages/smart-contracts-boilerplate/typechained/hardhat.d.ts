@@ -2,221 +2,88 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { ethers } from "ethers";
-import {
-  FactoryOptions,
-  HardhatEthersHelpers as HardhatEthersHelpersBase,
-} from "@nomiclabs/hardhat-ethers/types";
+import { ethers } from 'ethers';
+import { FactoryOptions, HardhatEthersHelpers as HardhatEthersHelpersBase } from '@nomiclabs/hardhat-ethers/types';
 
-import * as Contracts from ".";
+import * as Contracts from '.';
 
-declare module "hardhat/types/runtime" {
+declare module 'hardhat/types/runtime' {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
+    getContractFactory(name: 'ERC20', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.ERC20__factory>;
+    getContractFactory(name: 'IERC20Metadata', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IERC20Metadata__factory>;
+    getContractFactory(name: 'IERC20', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IERC20__factory>;
+    getContractFactory(name: 'Collector', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.Collector__factory>;
+    getContractFactory(name: 'DomiInterface', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.DomiInterface__factory>;
     getContractFactory(
-      name: "ERC20",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ERC20__factory>;
-    getContractFactory(
-      name: "IERC20Metadata",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IERC20Metadata__factory>;
-    getContractFactory(
-      name: "IERC20",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IERC20__factory>;
-    getContractFactory(
-      name: "Collector",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Collector__factory>;
-    getContractFactory(
-      name: "DomiInterface",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.DomiInterface__factory>;
-    getContractFactory(
-      name: "MonthlyPaymentsCalculatorInterface",
+      name: 'MonthlyPaymentsCalculatorInterface',
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MonthlyPaymentsCalculatorInterface__factory>;
     getContractFactory(
-      name: "PrincipalInterface",
+      name: 'PrincipalInterface',
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.PrincipalInterface__factory>;
     getContractFactory(
-      name: "ReservesInterface",
+      name: 'ReservesInterface',
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ReservesInterface__factory>;
+    getContractFactory(name: 'Distributor', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.Distributor__factory>;
+    getContractFactory(name: 'DomiInterface', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.DomiInterface__factory>;
+    getContractFactory(name: 'DomiToken', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.DomiToken__factory>;
     getContractFactory(
-      name: "Distributor",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Distributor__factory>;
-    getContractFactory(
-      name: "DomiInterface",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.DomiInterface__factory>;
-    getContractFactory(
-      name: "DomiToken",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.DomiToken__factory>;
-    getContractFactory(
-      name: "PrincipalInterface",
+      name: 'PrincipalInterface',
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.PrincipalInterface__factory>;
+    getContractFactory(name: 'Greeter', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.Greeter__factory>;
+    getContractFactory(name: 'DomiInterface', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.DomiInterface__factory>;
     getContractFactory(
-      name: "Greeter",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Greeter__factory>;
-    getContractFactory(
-      name: "DomiInterface",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.DomiInterface__factory>;
-    getContractFactory(
-      name: "HomeContractsInterface",
+      name: 'HomeContractsInterface',
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.HomeContractsInterface__factory>;
     getContractFactory(
-      name: "MonthlyPaymentsCalculator",
+      name: 'MonthlyPaymentsCalculator',
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MonthlyPaymentsCalculator__factory>;
     getContractFactory(
-      name: "PrincipalInterface",
+      name: 'PrincipalInterface',
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.PrincipalInterface__factory>;
+    getContractFactory(name: 'Ownable', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.Ownable__factory>;
+    getContractFactory(name: 'DomiInterface', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.DomiInterface__factory>;
+    getContractFactory(name: 'Principal', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.Principal__factory>;
     getContractFactory(
-      name: "Ownable",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Ownable__factory>;
-    getContractFactory(
-      name: "DomiInterface",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.DomiInterface__factory>;
-    getContractFactory(
-      name: "Principal",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Principal__factory>;
-    getContractFactory(
-      name: "ReservesInterface",
+      name: 'ReservesInterface',
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ReservesInterface__factory>;
 
+    getContractAt(name: 'ERC20', address: string, signer?: ethers.Signer): Promise<Contracts.ERC20>;
+    getContractAt(name: 'IERC20Metadata', address: string, signer?: ethers.Signer): Promise<Contracts.IERC20Metadata>;
+    getContractAt(name: 'IERC20', address: string, signer?: ethers.Signer): Promise<Contracts.IERC20>;
+    getContractAt(name: 'Collector', address: string, signer?: ethers.Signer): Promise<Contracts.Collector>;
+    getContractAt(name: 'DomiInterface', address: string, signer?: ethers.Signer): Promise<Contracts.DomiInterface>;
     getContractAt(
-      name: "ERC20",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ERC20>;
-    getContractAt(
-      name: "IERC20Metadata",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IERC20Metadata>;
-    getContractAt(
-      name: "IERC20",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IERC20>;
-    getContractAt(
-      name: "Collector",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Collector>;
-    getContractAt(
-      name: "DomiInterface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.DomiInterface>;
-    getContractAt(
-      name: "MonthlyPaymentsCalculatorInterface",
+      name: 'MonthlyPaymentsCalculatorInterface',
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.MonthlyPaymentsCalculatorInterface>;
-    getContractAt(
-      name: "PrincipalInterface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.PrincipalInterface>;
-    getContractAt(
-      name: "ReservesInterface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ReservesInterface>;
-    getContractAt(
-      name: "Distributor",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Distributor>;
-    getContractAt(
-      name: "DomiInterface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.DomiInterface>;
-    getContractAt(
-      name: "DomiToken",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.DomiToken>;
-    getContractAt(
-      name: "PrincipalInterface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.PrincipalInterface>;
-    getContractAt(
-      name: "Greeter",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Greeter>;
-    getContractAt(
-      name: "DomiInterface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.DomiInterface>;
-    getContractAt(
-      name: "HomeContractsInterface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.HomeContractsInterface>;
-    getContractAt(
-      name: "MonthlyPaymentsCalculator",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.MonthlyPaymentsCalculator>;
-    getContractAt(
-      name: "PrincipalInterface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.PrincipalInterface>;
-    getContractAt(
-      name: "Ownable",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Ownable>;
-    getContractAt(
-      name: "DomiInterface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.DomiInterface>;
-    getContractAt(
-      name: "Principal",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Principal>;
-    getContractAt(
-      name: "ReservesInterface",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ReservesInterface>;
+    getContractAt(name: 'PrincipalInterface', address: string, signer?: ethers.Signer): Promise<Contracts.PrincipalInterface>;
+    getContractAt(name: 'ReservesInterface', address: string, signer?: ethers.Signer): Promise<Contracts.ReservesInterface>;
+    getContractAt(name: 'Distributor', address: string, signer?: ethers.Signer): Promise<Contracts.Distributor>;
+    getContractAt(name: 'DomiInterface', address: string, signer?: ethers.Signer): Promise<Contracts.DomiInterface>;
+    getContractAt(name: 'DomiToken', address: string, signer?: ethers.Signer): Promise<Contracts.DomiToken>;
+    getContractAt(name: 'PrincipalInterface', address: string, signer?: ethers.Signer): Promise<Contracts.PrincipalInterface>;
+    getContractAt(name: 'Greeter', address: string, signer?: ethers.Signer): Promise<Contracts.Greeter>;
+    getContractAt(name: 'DomiInterface', address: string, signer?: ethers.Signer): Promise<Contracts.DomiInterface>;
+    getContractAt(name: 'HomeContractsInterface', address: string, signer?: ethers.Signer): Promise<Contracts.HomeContractsInterface>;
+    getContractAt(name: 'MonthlyPaymentsCalculator', address: string, signer?: ethers.Signer): Promise<Contracts.MonthlyPaymentsCalculator>;
+    getContractAt(name: 'PrincipalInterface', address: string, signer?: ethers.Signer): Promise<Contracts.PrincipalInterface>;
+    getContractAt(name: 'Ownable', address: string, signer?: ethers.Signer): Promise<Contracts.Ownable>;
+    getContractAt(name: 'DomiInterface', address: string, signer?: ethers.Signer): Promise<Contracts.DomiInterface>;
+    getContractAt(name: 'Principal', address: string, signer?: ethers.Signer): Promise<Contracts.Principal>;
+    getContractAt(name: 'ReservesInterface', address: string, signer?: ethers.Signer): Promise<Contracts.ReservesInterface>;
 
     // default types
-    getContractFactory(
-      name: string,
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<ethers.ContractFactory>;
-    getContractFactory(
-      abi: any[],
-      bytecode: ethers.utils.BytesLike,
-      signer?: ethers.Signer
-    ): Promise<ethers.ContractFactory>;
-    getContractAt(
-      nameOrAbi: string | any[],
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<ethers.Contract>;
+    getContractFactory(name: string, signerOrOptions?: ethers.Signer | FactoryOptions): Promise<ethers.ContractFactory>;
+    getContractFactory(abi: any[], bytecode: ethers.utils.BytesLike, signer?: ethers.Signer): Promise<ethers.ContractFactory>;
+    getContractAt(nameOrAbi: string | any[], address: string, signer?: ethers.Signer): Promise<ethers.Contract>;
   }
 }
