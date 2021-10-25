@@ -89,13 +89,12 @@ contract MonthlyPaymentsCalculator is Ownable {
     uint256 monthsLeft,
     uint256 principal
   ) private pure returns (uint256) {
-    // uint256 futureValueOfPrincipal = compound(principal, monthsLeft, savingsRate);
-    // uint256 shortfall = homePrice - futureValueOfPrincipal;
+    uint256 futureValueOfPrincipal = compound(principal, monthsLeft, savingsRate);
+    uint256 shortfall = homePrice - futureValueOfPrincipal;
     // uint256 payment = calculatePMT(savingsRate, monthsLeft, principal, shortfall);
     // return payment;
-    // for now just naively divide homePrice by monthsLeft, will factor in compounding next time
-    savingsRate + principal;
-    return homePrice / monthsLeft;
+    // for now just naively divide shortfall by monthsLeft, will factor in future monthly principal compounding next time
+    return shortfall / monthsLeft;
   }
 
   function _calculateBufferPayment(uint256 homePrice, uint256 savingsRate)
@@ -115,13 +114,14 @@ contract MonthlyPaymentsCalculator is Ownable {
     }
   }
 
-  // assumes principal has 10 decimals, rate has 5 decimals. Rounds down.
+  // assumes rate has 5 decimals. Rounds down.
   // returns in 2 decimals
   function compound(
     uint256 principal,
     uint256 timePeriods,
     uint256 rate
   ) public pure returns (uint256) {
+    principal *= 10**3;
     for (uint256 i = 0; i < timePeriods; i++) {
       principal += (principal * rate) / 12 / 10**5;
     }
