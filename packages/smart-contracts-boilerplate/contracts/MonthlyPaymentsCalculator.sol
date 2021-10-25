@@ -94,7 +94,9 @@ contract MonthlyPaymentsCalculator is Ownable {
     // uint256 payment = calculatePMT(savingsRate, monthsLeft, principal, shortfall);
     // return payment;
     // for now just naively divide shortfall by monthsLeft, will factor in future monthly principal compounding next time
-    return shortfall / monthsLeft;
+    return approximate(shortfall, monthsLeft, savingsRate);
+    // shortfall -= approximate(shortfall, monthsLeft, savingsRate);
+    // return shortfall / monthsLeft;
   }
 
   function _calculateBufferPayment(uint256 homePrice, uint256 savingsRate)
@@ -126,6 +128,29 @@ contract MonthlyPaymentsCalculator is Ownable {
       principal += (principal * rate) / 12 / 10**5;
     }
     return principal / 10**3;
+  }
+
+  function approximate(uint shortfall, uint monthsLeft, uint savingsRate) public pure returns (uint) {
+    shortfall *= 1;
+    uint approx = shortfall / monthsLeft;
+    uint temp;
+    for (uint i = 0; i < 100 ; i++) {
+      temp = 0;
+      for (uint j = 0; j < monthsLeft; j++) {
+        temp += approx;
+        temp += temp * savingsRate / 12 / 10**5;
+      }
+      if (temp > shortfall) {
+        approx -= 9;
+      } else if (temp == shortfall) {
+        return approx;
+      } else {
+        return (approx + 10);
+      }
+    }
+    return approx;
+    // uint approximateMonthlyInterest = shortfall * savingsRate / 12 / 10**5;
+    // return approximateMonthlyInterest * monthsLeft / 10**3;
   }
 
   function calculatePMT(
