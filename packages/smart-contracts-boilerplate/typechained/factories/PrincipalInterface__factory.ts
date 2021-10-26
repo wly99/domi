@@ -11,24 +11,13 @@ const _abi = [
     inputs: [
       {
         internalType: 'uint256',
-        name: 'homeId',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'renterAddress',
+        name: 'amount',
         type: 'uint256',
       },
     ],
-    name: 'getPrincipal',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'principal',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
+    name: 'distributeSavingsRate',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
 ];

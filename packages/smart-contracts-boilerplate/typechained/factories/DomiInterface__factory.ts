@@ -8,12 +8,44 @@ import type { DomiInterface, DomiInterfaceInterface } from '../DomiInterface';
 
 const _abi = [
   {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'whom',
+        type: 'address',
+      },
+    ],
+    name: 'balanceOf',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'getStabilityFee',
     outputs: [
       {
         internalType: 'uint256',
         name: 'stabilityFee',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getTotalSupply',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'totalSupply',
         type: 'uint256',
       },
     ],

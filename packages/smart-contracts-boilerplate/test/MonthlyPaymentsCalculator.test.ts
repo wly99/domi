@@ -22,23 +22,43 @@ describe('MonthlyPaymentsCalculatorABI', () => {
     monthlyPaymentsCalculator = await waffle.loadFixture(fixture);
   });
 
-  it('Initalize with correct min value', async () => {
-    expect(await monthlyPaymentsCalculator.min(1, 2)).to.equal(1);
-  });
-
   describe('#calculate stability fee payment', () => {
     it('should return correct value', async () => {
-      expect(await monthlyPaymentsCalculator.testCalculateStabilityFeePayment(homePrice, stabilityFee)).to.equal(16667);
+      expect(await monthlyPaymentsCalculator.testCalculatesavingsRatePayment(homePrice, stabilityFee)).to.equal(16667);
     });
 
     it('should return 1 if stabilityFee is 0', async () => {
-      expect(await monthlyPaymentsCalculator.testCalculateStabilityFeePayment(homePrice, 0)).to.equal(1);
+      expect(await monthlyPaymentsCalculator.testCalculatesavingsRatePayment(homePrice, 0)).to.equal(1);
     });
   });
 
   describe('#calculate principal payment', () => {
-    it('should return correct value', async () => {
+    it('should return correct value for 100K home', async () => {
       expect(await monthlyPaymentsCalculator.testCalculatePrincipalPayment(homePrice, stabilityFee, monthsLeft, principal)).to.equal(20295);
+    });
+
+    it('should return correct value for 100K home and 10 years', async () => {
+      expect(await monthlyPaymentsCalculator.testCalculatePrincipalPayment(homePrice, stabilityFee, 120, principal)).to.equal(75347);
+    });
+
+    it('should return correct value for 100K home, 10 years and 5K principal', async () => {
+      expect(await monthlyPaymentsCalculator.testCalculatePrincipalPayment(homePrice, stabilityFee, 120, 5000)).to.equal(70746);
+    });
+
+    it('should return correct value for 10M home, 10 years and 5K principal', async () => {
+      expect(await monthlyPaymentsCalculator.testCalculatePrincipalPayment(10000000, stabilityFee, 120, 5000)).to.equal(70746);
+    });
+
+    it('should return correct value for 100K home, 10 years, 5K principal and 3.25% stabilityFee', async () => {
+      expect(await monthlyPaymentsCalculator.testCalculatePrincipalPayment(homePrice, 3250, 120, 5000)).to.equal(65750);
+    });
+
+    it('should return correct value for 1M home', async () => {
+      expect(await monthlyPaymentsCalculator.testCalculatePrincipalPayment(1000000, stabilityFee, monthsLeft, principal)).to.equal(202953);
+    });
+
+    it('should return correct value for 10M home', async () => {
+      expect(await monthlyPaymentsCalculator.testCalculatePrincipalPayment(10000000, stabilityFee, monthsLeft, principal)).to.equal(2029528);
     });
   });
 
@@ -49,6 +69,20 @@ describe('MonthlyPaymentsCalculatorABI', () => {
 
     it('should return 834 if stabilityFee is 0', async () => {
       expect(await monthlyPaymentsCalculator.testCalculateBufferPayment(homePrice, 0)).to.equal(834);
+    });
+  });
+
+  describe('#calculate future value', () => {
+    it('should return correct value for small principal', async () => {
+      expect(await monthlyPaymentsCalculator.compound(100, 30, stabilityFee)).to.equal(105);
+    });
+
+    it('should return correct value for big principal', async () => {
+      expect(await monthlyPaymentsCalculator.compound(1000000, 30, stabilityFee)).to.equal(1051227);
+    });
+
+    it('should return correct value for big principal and long time period', async () => {
+      expect(await monthlyPaymentsCalculator.compound(1000000, 360, stabilityFee)).to.equal(1821208);
     });
   });
 });

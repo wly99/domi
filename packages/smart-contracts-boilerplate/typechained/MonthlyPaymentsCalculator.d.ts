@@ -21,24 +21,36 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
 
 interface MonthlyPaymentsCalculatorInterface extends ethers.utils.Interface {
   functions: {
-    'calculatePayment(uint256,uint256)': FunctionFragment;
+    'approximate(uint256,uint256,uint256)': FunctionFragment;
+    'calculatePMT(uint256,uint256,uint256,uint256)': FunctionFragment;
+    'calculatePayment(uint256,address)': FunctionFragment;
+    'compound(uint256,uint256,uint256)': FunctionFragment;
+    'domiContract()': FunctionFragment;
+    'homeContractsContract()': FunctionFragment;
     'isOwner()': FunctionFragment;
-    'min(uint256,uint256)': FunctionFragment;
     'owner()': FunctionFragment;
+    'pmt(int128,int128,int128,int128)': FunctionFragment;
+    'principalContract()': FunctionFragment;
     'renounceOwnership()': FunctionFragment;
     'setDomiContractAddress(address)': FunctionFragment;
     'setHomeContractsContractAddress(address)': FunctionFragment;
     'setPrincipalContractAddress(address)': FunctionFragment;
     'testCalculateBufferPayment(uint256,uint256)': FunctionFragment;
     'testCalculatePrincipalPayment(uint256,uint256,uint256,uint256)': FunctionFragment;
-    'testCalculateStabilityFeePayment(uint256,uint256)': FunctionFragment;
+    'testCalculatesavingsRatePayment(uint256,uint256)': FunctionFragment;
     'transferOwnership(address)': FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: 'calculatePayment', values: [BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'approximate', values: [BigNumberish, BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'calculatePMT', values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'calculatePayment', values: [BigNumberish, string]): string;
+  encodeFunctionData(functionFragment: 'compound', values: [BigNumberish, BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'domiContract', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'homeContractsContract', values?: undefined): string;
   encodeFunctionData(functionFragment: 'isOwner', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'min', values: [BigNumberish, BigNumberish]): string;
   encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'pmt', values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'principalContract', values?: undefined): string;
   encodeFunctionData(functionFragment: 'renounceOwnership', values?: undefined): string;
   encodeFunctionData(functionFragment: 'setDomiContractAddress', values: [string]): string;
   encodeFunctionData(functionFragment: 'setHomeContractsContractAddress', values: [string]): string;
@@ -48,20 +60,26 @@ interface MonthlyPaymentsCalculatorInterface extends ethers.utils.Interface {
     functionFragment: 'testCalculatePrincipalPayment',
     values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: 'testCalculateStabilityFeePayment', values: [BigNumberish, BigNumberish]): string;
+  encodeFunctionData(functionFragment: 'testCalculatesavingsRatePayment', values: [BigNumberish, BigNumberish]): string;
   encodeFunctionData(functionFragment: 'transferOwnership', values: [string]): string;
 
+  decodeFunctionResult(functionFragment: 'approximate', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'calculatePMT', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'calculatePayment', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'compound', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'domiContract', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'homeContractsContract', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'isOwner', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'min', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'pmt', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'principalContract', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'renounceOwnership', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setDomiContractAddress', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setHomeContractsContractAddress', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'setPrincipalContractAddress', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'testCalculateBufferPayment', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'testCalculatePrincipalPayment', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'testCalculateStabilityFeePayment', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'testCalculatesavingsRatePayment', data: BytesLike): Result;
   decodeFunctionResult(functionFragment: 'transferOwnership', data: BytesLike): Result;
 
   events: {
@@ -115,13 +133,37 @@ export class MonthlyPaymentsCalculator extends BaseContract {
   interface: MonthlyPaymentsCalculatorInterface;
 
   functions: {
-    calculatePayment(homeId: BigNumberish, renterAddress: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber, BigNumber, BigNumber]>;
+    approximate(shortfall: BigNumberish, monthsLeft: BigNumberish, savingsRate: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    calculatePMT(
+      savingsRate: BigNumberish,
+      monthsLeft: BigNumberish,
+      principal: BigNumberish,
+      shortfall: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    calculatePayment(homeId: BigNumberish, renterAddress: string, overrides?: CallOverrides): Promise<[BigNumber, BigNumber, BigNumber]>;
+
+    compound(principal: BigNumberish, timePeriods: BigNumberish, rate: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    domiContract(overrides?: CallOverrides): Promise<[string]>;
+
+    homeContractsContract(overrides?: CallOverrides): Promise<[string]>;
 
     isOwner(overrides?: CallOverrides): Promise<[boolean]>;
 
-    min(a: BigNumberish, b: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
-
     owner(overrides?: CallOverrides): Promise<[string]>;
+
+    pmt(
+      ratePerPeriod: BigNumberish,
+      numberOfPayments: BigNumberish,
+      presentValue: BigNumberish,
+      futureValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    principalContract(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
@@ -131,28 +173,52 @@ export class MonthlyPaymentsCalculator extends BaseContract {
 
     setPrincipalContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-    testCalculateBufferPayment(homePrice: BigNumberish, stabilityFee: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
+    testCalculateBufferPayment(homePrice: BigNumberish, savingsRate: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     testCalculatePrincipalPayment(
       homePrice: BigNumberish,
-      stabilityFee: BigNumberish,
+      savingsRate: BigNumberish,
       monthsLeft: BigNumberish,
       principal: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    testCalculateStabilityFeePayment(homePrice: BigNumberish, stabilityFee: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
+    testCalculatesavingsRatePayment(homePrice: BigNumberish, savingsRate: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transferOwnership(newOwner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
   };
 
-  calculatePayment(homeId: BigNumberish, renterAddress: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber, BigNumber, BigNumber]>;
+  approximate(shortfall: BigNumberish, monthsLeft: BigNumberish, savingsRate: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+  calculatePMT(
+    savingsRate: BigNumberish,
+    monthsLeft: BigNumberish,
+    principal: BigNumberish,
+    shortfall: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  calculatePayment(homeId: BigNumberish, renterAddress: string, overrides?: CallOverrides): Promise<[BigNumber, BigNumber, BigNumber]>;
+
+  compound(principal: BigNumberish, timePeriods: BigNumberish, rate: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+  domiContract(overrides?: CallOverrides): Promise<string>;
+
+  homeContractsContract(overrides?: CallOverrides): Promise<string>;
 
   isOwner(overrides?: CallOverrides): Promise<boolean>;
 
-  min(a: BigNumberish, b: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
   owner(overrides?: CallOverrides): Promise<string>;
+
+  pmt(
+    ratePerPeriod: BigNumberish,
+    numberOfPayments: BigNumberish,
+    presentValue: BigNumberish,
+    futureValue: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  principalContract(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
@@ -162,28 +228,52 @@ export class MonthlyPaymentsCalculator extends BaseContract {
 
   setPrincipalContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
-  testCalculateBufferPayment(homePrice: BigNumberish, stabilityFee: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+  testCalculateBufferPayment(homePrice: BigNumberish, savingsRate: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   testCalculatePrincipalPayment(
     homePrice: BigNumberish,
-    stabilityFee: BigNumberish,
+    savingsRate: BigNumberish,
     monthsLeft: BigNumberish,
     principal: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  testCalculateStabilityFeePayment(homePrice: BigNumberish, stabilityFee: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+  testCalculatesavingsRatePayment(homePrice: BigNumberish, savingsRate: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
   transferOwnership(newOwner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
 
   callStatic: {
-    calculatePayment(homeId: BigNumberish, renterAddress: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber, BigNumber, BigNumber]>;
+    approximate(shortfall: BigNumberish, monthsLeft: BigNumberish, savingsRate: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    calculatePMT(
+      savingsRate: BigNumberish,
+      monthsLeft: BigNumberish,
+      principal: BigNumberish,
+      shortfall: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    calculatePayment(homeId: BigNumberish, renterAddress: string, overrides?: CallOverrides): Promise<[BigNumber, BigNumber, BigNumber]>;
+
+    compound(principal: BigNumberish, timePeriods: BigNumberish, rate: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    domiContract(overrides?: CallOverrides): Promise<string>;
+
+    homeContractsContract(overrides?: CallOverrides): Promise<string>;
 
     isOwner(overrides?: CallOverrides): Promise<boolean>;
 
-    min(a: BigNumberish, b: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
     owner(overrides?: CallOverrides): Promise<string>;
+
+    pmt(
+      ratePerPeriod: BigNumberish,
+      numberOfPayments: BigNumberish,
+      presentValue: BigNumberish,
+      futureValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    principalContract(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -193,17 +283,17 @@ export class MonthlyPaymentsCalculator extends BaseContract {
 
     setPrincipalContractAddress(_address: string, overrides?: CallOverrides): Promise<void>;
 
-    testCalculateBufferPayment(homePrice: BigNumberish, stabilityFee: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+    testCalculateBufferPayment(homePrice: BigNumberish, savingsRate: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     testCalculatePrincipalPayment(
       homePrice: BigNumberish,
-      stabilityFee: BigNumberish,
+      savingsRate: BigNumberish,
       monthsLeft: BigNumberish,
       principal: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    testCalculateStabilityFeePayment(homePrice: BigNumberish, stabilityFee: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+    testCalculatesavingsRatePayment(homePrice: BigNumberish, savingsRate: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(newOwner: string, overrides?: CallOverrides): Promise<void>;
   };
@@ -221,13 +311,37 @@ export class MonthlyPaymentsCalculator extends BaseContract {
   };
 
   estimateGas: {
-    calculatePayment(homeId: BigNumberish, renterAddress: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+    approximate(shortfall: BigNumberish, monthsLeft: BigNumberish, savingsRate: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    calculatePMT(
+      savingsRate: BigNumberish,
+      monthsLeft: BigNumberish,
+      principal: BigNumberish,
+      shortfall: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    calculatePayment(homeId: BigNumberish, renterAddress: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    compound(principal: BigNumberish, timePeriods: BigNumberish, rate: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    domiContract(overrides?: CallOverrides): Promise<BigNumber>;
+
+    homeContractsContract(overrides?: CallOverrides): Promise<BigNumber>;
 
     isOwner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    min(a: BigNumberish, b: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
     owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    pmt(
+      ratePerPeriod: BigNumberish,
+      numberOfPayments: BigNumberish,
+      presentValue: BigNumberish,
+      futureValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    principalContract(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
@@ -237,29 +351,58 @@ export class MonthlyPaymentsCalculator extends BaseContract {
 
     setPrincipalContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
 
-    testCalculateBufferPayment(homePrice: BigNumberish, stabilityFee: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+    testCalculateBufferPayment(homePrice: BigNumberish, savingsRate: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     testCalculatePrincipalPayment(
       homePrice: BigNumberish,
-      stabilityFee: BigNumberish,
+      savingsRate: BigNumberish,
       monthsLeft: BigNumberish,
       principal: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    testCalculateStabilityFeePayment(homePrice: BigNumberish, stabilityFee: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+    testCalculatesavingsRatePayment(homePrice: BigNumberish, savingsRate: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(newOwner: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    calculatePayment(homeId: BigNumberish, renterAddress: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    approximate(
+      shortfall: BigNumberish,
+      monthsLeft: BigNumberish,
+      savingsRate: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    calculatePMT(
+      savingsRate: BigNumberish,
+      monthsLeft: BigNumberish,
+      principal: BigNumberish,
+      shortfall: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    calculatePayment(homeId: BigNumberish, renterAddress: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    compound(principal: BigNumberish, timePeriods: BigNumberish, rate: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    domiContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    homeContractsContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isOwner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    min(a: BigNumberish, b: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    pmt(
+      ratePerPeriod: BigNumberish,
+      numberOfPayments: BigNumberish,
+      presentValue: BigNumberish,
+      futureValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    principalContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
@@ -272,19 +415,19 @@ export class MonthlyPaymentsCalculator extends BaseContract {
 
     setPrincipalContractAddress(_address: string, overrides?: Overrides & { from?: string | Promise<string> }): Promise<PopulatedTransaction>;
 
-    testCalculateBufferPayment(homePrice: BigNumberish, stabilityFee: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    testCalculateBufferPayment(homePrice: BigNumberish, savingsRate: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     testCalculatePrincipalPayment(
       homePrice: BigNumberish,
-      stabilityFee: BigNumberish,
+      savingsRate: BigNumberish,
       monthsLeft: BigNumberish,
       principal: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    testCalculateStabilityFeePayment(
+    testCalculatesavingsRatePayment(
       homePrice: BigNumberish,
-      stabilityFee: BigNumberish,
+      savingsRate: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
