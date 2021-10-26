@@ -11,6 +11,7 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
+  Overrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -106,8 +107,8 @@ export class HomePriceCalculator extends BaseContract {
     determineHomePrice(
       postalCode: BigNumberish,
       streetName: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   compareStrings(
@@ -119,8 +120,8 @@ export class HomePriceCalculator extends BaseContract {
   determineHomePrice(
     postalCode: BigNumberish,
     streetName: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
     compareStrings(
@@ -156,7 +157,7 @@ export class HomePriceCalculator extends BaseContract {
     determineHomePrice(
       postalCode: BigNumberish,
       streetName: string,
-      overrides?: CallOverrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
@@ -170,7 +171,7 @@ export class HomePriceCalculator extends BaseContract {
     determineHomePrice(
       postalCode: BigNumberish,
       streetName: string,
-      overrides?: CallOverrides
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

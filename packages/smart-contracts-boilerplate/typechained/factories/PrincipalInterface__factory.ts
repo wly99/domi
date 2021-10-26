@@ -2,23 +2,26 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from 'ethers';
-import { Provider } from '@ethersproject/providers';
-import type { PrincipalInterface, PrincipalInterfaceInterface } from '../PrincipalInterface';
+import { Contract, Signer, utils } from "ethers";
+import { Provider } from "@ethersproject/providers";
+import type {
+  PrincipalInterface,
+  PrincipalInterfaceInterface,
+} from "../PrincipalInterface";
 
 const _abi = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
       },
     ],
-    name: 'distributeSavingsRate',
+    name: "distributeSavingsRate",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
 ];
 
@@ -27,7 +30,10 @@ export class PrincipalInterface__factory {
   static createInterface(): PrincipalInterfaceInterface {
     return new utils.Interface(_abi) as PrincipalInterfaceInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): PrincipalInterface {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): PrincipalInterface {
     return new Contract(address, _abi, signerOrProvider) as PrincipalInterface;
   }
 }

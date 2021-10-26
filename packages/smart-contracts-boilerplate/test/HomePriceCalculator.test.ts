@@ -15,15 +15,14 @@ describe('HomePriceCalculator', () => {
   });
 
   it('Should return 21000 when postal code is even and location is Orchard', async () => {
-    expect(await homePriceCalculator.determineHomePrice(510212, "Orchard")).to.equal(21000);
+    expect(await homePriceCalculator.determineHomePrice(510212, 'Orchard')).to.equal(21000);
   });
 
   it('Should return 20000 when postal code is odd and location is Orchard', async () => {
-    expect(await homePriceCalculator.determineHomePrice(510211, "Orchard")).to.equal(20000);
+    expect(await homePriceCalculator.determineHomePrice(510211, 'Orchard')).to.equal(20000);
   });
 
   it('Should return 11000 when postal code is even and location is not Orchard', async () => {
-    expect(await homePriceCalculator.determineHomePrice(510212, "Bishan")).to.equal(11000);
+    expect(await homePriceCalculator.determineHomePrice(510212, 'Bishan')).to.equal(11000);
   });
-
 });
