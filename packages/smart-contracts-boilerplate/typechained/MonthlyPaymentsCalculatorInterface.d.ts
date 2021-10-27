@@ -13,20 +13,27 @@ import {
   ContractTransaction,
   Overrides,
   CallOverrides,
-} from 'ethers';
-import { BytesLike } from '@ethersproject/bytes';
-import { Listener, Provider } from '@ethersproject/providers';
-import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
-import type { TypedEventFilter, TypedEvent, TypedListener } from './common';
+} from "ethers";
+import { BytesLike } from "@ethersproject/bytes";
+import { Listener, Provider } from "@ethersproject/providers";
+import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
+import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface MonthlyPaymentsCalculatorInterfaceInterface extends ethers.utils.Interface {
+interface MonthlyPaymentsCalculatorInterfaceInterface
+  extends ethers.utils.Interface {
   functions: {
-    'calculatePayment(uint256,address)': FunctionFragment;
+    "calculatePayment(bytes32,address)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: 'calculatePayment', values: [BigNumberish, string]): string;
+  encodeFunctionData(
+    functionFragment: "calculatePayment",
+    values: [BytesLike, string]
+  ): string;
 
-  decodeFunctionResult(functionFragment: 'calculatePayment', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "calculatePayment",
+    data: BytesLike
+  ): Result;
 
   events: {};
 }
@@ -55,7 +62,9 @@ export class MonthlyPaymentsCalculatorInterface extends BaseContract {
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
     listener: TypedListener<EventArgsArray, EventArgsObject>
   ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>): this;
+  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+  ): this;
 
   listeners(eventName?: string): Array<Listener>;
   off(eventName: string, listener: Listener): this;
@@ -74,27 +83,31 @@ export class MonthlyPaymentsCalculatorInterface extends BaseContract {
 
   functions: {
     calculatePayment(
-      homeId: BigNumberish,
+      homeId: BytesLike,
       renterAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
   calculatePayment(
-    homeId: BigNumberish,
+    homeId: BytesLike,
     renterAddress: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    calculatePayment(homeId: BigNumberish, renterAddress: string, overrides?: CallOverrides): Promise<[BigNumber, BigNumber, BigNumber]>;
+    calculatePayment(
+      homeId: BytesLike,
+      renterAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
     calculatePayment(
-      homeId: BigNumberish,
+      homeId: BytesLike,
       renterAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -102,7 +115,7 @@ export class MonthlyPaymentsCalculatorInterface extends BaseContract {
 
   populateTransaction: {
     calculatePayment(
-      homeId: BigNumberish,
+      homeId: BytesLike,
       renterAddress: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

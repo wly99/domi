@@ -2752,6 +2752,13 @@ hardhat-deploy@^0.9.3:
     murmur-128 "^0.2.1"
     qs "^6.9.4"
 
+hardhat-preprocessor@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/hardhat-preprocessor/-/hardhat-preprocessor-0.1.4.tgz#daa3004c3d2cca2ce1b5555c0c9b1940670fd022"
+  integrity sha512-TeIi9y5xXf6oKa2BMqXAFQV0tAJRy9MKDElu0VrHMsEVpiUXRh47AEJqWkFpWr2lVLFweif40n1RGxGIEFOPXw==
+  dependencies:
+    murmur-128 "^0.2.1"
+
 has-bigints@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/has-bigints/-/has-bigints-1.0.1.tgz#64fe6acb020673e3b78db035a5af69aa9d07b113"

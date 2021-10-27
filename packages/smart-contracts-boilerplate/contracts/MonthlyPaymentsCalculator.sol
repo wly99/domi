@@ -1,14 +1,15 @@
 pragma solidity ^0.8.0;
 
 import './Ownable.sol';
-import 'abdk-libraries-solidity/ABDKMath64x64.sol';
+
+// import 'abdk-libraries-solidity/ABDKMath64x64.sol';
 
 abstract contract DomiInterface {
   function savingsRate() external view virtual returns (uint256 savingsRate);
 }
 
 abstract contract HomeContractsInterface {
-  function getDetails(uint256 homeId)
+  function getDetails(bytes32 homeId)
     external
     view
     virtual
@@ -20,7 +21,7 @@ abstract contract HomeContractsInterface {
 }
 
 abstract contract PrincipalInterface {
-  function getPrincipal(uint256 homeId, address renterAddress)
+  function getPrincipal(bytes32 homeId, address renterAddress)
     external
     view
     virtual
@@ -44,7 +45,7 @@ contract MonthlyPaymentsCalculator is Ownable {
     principalContract = PrincipalInterface(_address);
   }
 
-  function calculatePayment(uint256 homeId, address renterAddress)
+  function calculatePayment(bytes32 homeId, address renterAddress)
     external
     view
     returns (
@@ -157,63 +158,63 @@ contract MonthlyPaymentsCalculator is Ownable {
     // return approximateMonthlyInterest * monthsLeft / 10**3;
   }
 
-  function calculatePMT(
-    uint256 savingsRate,
-    uint256 monthsLeft,
-    uint256 principal,
-    uint256 shortfall
-  ) public pure returns (uint256) {
-    return
-      ABDKMath64x64.toUInt(
-        pmt(
-          ABDKMath64x64.fromUInt(savingsRate),
-          ABDKMath64x64.fromUInt(monthsLeft),
-          ABDKMath64x64.fromUInt(principal),
-          ABDKMath64x64.fromUInt(shortfall)
-        )
-      );
-  }
+  // function calculatePMT(
+  //   uint256 savingsRate,
+  //   uint256 monthsLeft,
+  //   uint256 principal,
+  //   uint256 shortfall
+  // ) public pure returns (uint256) {
+  //   return
+  //     ABDKMath64x64.toUInt(
+  //       pmt(
+  //         ABDKMath64x64.fromUInt(savingsRate),
+  //         ABDKMath64x64.fromUInt(monthsLeft),
+  //         ABDKMath64x64.fromUInt(principal),
+  //         ABDKMath64x64.fromUInt(shortfall)
+  //       )
+  //     );
+  // }
 
-  function pmt(
-    int128 ratePerPeriod,
-    int128 numberOfPayments,
-    int128 presentValue,
-    int128 futureValue
-  ) public pure returns (int128) {
-    ratePerPeriod = ratePerPeriod / ABDKMath64x64.fromUInt(12 * 10**5);
-    presentValue = ABDKMath64x64.neg(presentValue);
+  // function pmt(
+  //   int128 ratePerPeriod,
+  //   int128 numberOfPayments,
+  //   int128 presentValue,
+  //   int128 futureValue
+  // ) public pure returns (int128) {
+  //   ratePerPeriod = ratePerPeriod / ABDKMath64x64.fromUInt(12 * 10**5);
+  //   presentValue = ABDKMath64x64.neg(presentValue);
 
-    // annuity formula shortfall = PMT((1+ratePerPeriod)**numberOfPayments - 1) / ratePerPeriod
-    int128 firstPart = ABDKMath64x64.mul(futureValue, ratePerPeriod);
-    int128 secondPart = ABDKMath64x64.add(ABDKMath64x64.fromUInt(1), ratePerPeriod);
-    int128 thirdPart = ABDKMath64x64.pow(secondPart, ABDKMath64x64.toUInt(numberOfPayments));
-    int128 fourthPart = ABDKMath64x64.sub(thirdPart, ABDKMath64x64.fromUInt(1));
-    return ABDKMath64x64.div(firstPart, fourthPart);
+  //   // annuity formula shortfall = PMT((1+ratePerPeriod)**numberOfPayments - 1) / ratePerPeriod
+  //   int128 firstPart = ABDKMath64x64.mul(futureValue, ratePerPeriod);
+  //   int128 secondPart = ABDKMath64x64.add(ABDKMath64x64.fromUInt(1), ratePerPeriod);
+  //   int128 thirdPart = ABDKMath64x64.pow(secondPart, ABDKMath64x64.toUInt(numberOfPayments));
+  //   int128 fourthPart = ABDKMath64x64.sub(thirdPart, ABDKMath64x64.fromUInt(1));
+  //   return ABDKMath64x64.div(firstPart, fourthPart);
 
-    // int128 q =
-    //   ABDKMath64x64.pow (
-    //     ABDKMath64x64.add (
-    //       0x10000000000000000,
-    //       ratePerPeriod),
-    //     ABDKMath64x64.toUInt (
-    //       numberOfPayments));
-    // return
-    //   ABDKMath64x64.neg(ABDKMath64x64.div (
-    //     ABDKMath64x64.mul (
-    //       ratePerPeriod,
-    //       ABDKMath64x64.add (
-    //         futureValue,
-    //         ABDKMath64x64.mul (
-    //           q,
-    //           presentValue))),
-    //     ABDKMath64x64.mul (
-    //       ABDKMath64x64.sub (
-    //         q,
-    //         0x10000000000000000),
-    //       ABDKMath64x64.add (
-    //         0x10000000000000000,
-    //         ratePerPeriod))));
-  }
+  //   // int128 q =
+  //   //   ABDKMath64x64.pow (
+  //   //     ABDKMath64x64.add (
+  //   //       0x10000000000000000,
+  //   //       ratePerPeriod),
+  //   //     ABDKMath64x64.toUInt (
+  //   //       numberOfPayments));
+  //   // return
+  //   //   ABDKMath64x64.neg(ABDKMath64x64.div (
+  //   //     ABDKMath64x64.mul (
+  //   //       ratePerPeriod,
+  //   //       ABDKMath64x64.add (
+  //   //         futureValue,
+  //   //         ABDKMath64x64.mul (
+  //   //           q,
+  //   //           presentValue))),
+  //   //     ABDKMath64x64.mul (
+  //   //       ABDKMath64x64.sub (
+  //   //         q,
+  //   //         0x10000000000000000),
+  //   //       ABDKMath64x64.add (
+  //   //         0x10000000000000000,
+  //   //         ratePerPeriod))));
+  // }
 
   function testCalculatesavingsRatePayment(uint256 homePrice, uint256 savingsRate)
     external

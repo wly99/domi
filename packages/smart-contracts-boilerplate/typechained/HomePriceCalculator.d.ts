@@ -19,25 +19,42 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface PrincipalInterfaceInterface extends ethers.utils.Interface {
+interface HomePriceCalculatorInterface extends ethers.utils.Interface {
   functions: {
-    "distributeSavingsRate(uint256)": FunctionFragment;
+    "compareStrings(string,string)": FunctionFragment;
+    "determineHomePrice(uint256,string)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: "distributeSavingsRate",
-    values: [BigNumberish]
+    functionFragment: "compareStrings",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "determineHomePrice",
+    values: [BigNumberish, string]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "distributeSavingsRate",
+    functionFragment: "compareStrings",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "determineHomePrice",
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "HomePriceReceived(uint256)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "HomePriceReceived"): EventFragment;
 }
 
-export class PrincipalInterface extends BaseContract {
+export type HomePriceReceivedEvent = TypedEvent<
+  [BigNumber] & { housePrice: BigNumber }
+>;
+
+export class HomePriceCalculator extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -78,39 +95,82 @@ export class PrincipalInterface extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: PrincipalInterfaceInterface;
+  interface: HomePriceCalculatorInterface;
 
   functions: {
-    distributeSavingsRate(
-      amount: BigNumberish,
+    compareStrings(
+      a: string,
+      b: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    determineHomePrice(
+      postalCode: BigNumberish,
+      streetName: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  distributeSavingsRate(
-    amount: BigNumberish,
+  compareStrings(
+    a: string,
+    b: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  determineHomePrice(
+    postalCode: BigNumberish,
+    streetName: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    distributeSavingsRate(
-      amount: BigNumberish,
+    compareStrings(
+      a: string,
+      b: string,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<boolean>;
+
+    determineHomePrice(
+      postalCode: BigNumberish,
+      streetName: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
-  filters: {};
+  filters: {
+    "HomePriceReceived(uint256)"(
+      housePrice?: null
+    ): TypedEventFilter<[BigNumber], { housePrice: BigNumber }>;
+
+    HomePriceReceived(
+      housePrice?: null
+    ): TypedEventFilter<[BigNumber], { housePrice: BigNumber }>;
+  };
 
   estimateGas: {
-    distributeSavingsRate(
-      amount: BigNumberish,
+    compareStrings(
+      a: string,
+      b: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    determineHomePrice(
+      postalCode: BigNumberish,
+      streetName: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    distributeSavingsRate(
-      amount: BigNumberish,
+    compareStrings(
+      a: string,
+      b: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    determineHomePrice(
+      postalCode: BigNumberish,
+      streetName: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

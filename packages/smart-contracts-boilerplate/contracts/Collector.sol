@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 import './Ownable.sol';
 
 abstract contract MonthlyPaymentsCalculatorInterface {
-  function calculatePayment(uint256 homeId, address renterAddress)
+  function calculatePayment(bytes32 homeId, address renterAddress)
     external
     virtual
     returns (
@@ -73,17 +73,25 @@ contract Collector is Ownable {
   mapping(address => PaymentHistory[]) public paymentsMade; // history of payments made by renter
   mapping(address => PaymentHistory[]) public paymentsMissed; // history of missed payments
 
-  function getMonthlyPaymentAmount(uint256 homeId, address renterAddress) external {
+  function getMonthlyPaymentAmount(bytes32 homeId, address renterAddress)
+    external
+    returns (
+      uint256,
+      uint256,
+      uint256
+    )
+  {
     (
-      uint256 stabilityFeePayment,
+      uint256 savingsRatePayment,
       uint256 principalPayment,
       uint256 bufferPayment
     ) = monthlyPaymentsCalculatorContract.calculatePayment(homeId, renterAddress);
     renterToMonthlyPayment[renterAddress] = MonthlyPayment(
-      stabilityFeePayment,
+      savingsRatePayment,
       principalPayment,
       bufferPayment
     );
+    return (savingsRatePayment, principalPayment, bufferPayment);
   }
 
   function payMonthlyPayments(address renterAddress, uint256 amount) external payable {

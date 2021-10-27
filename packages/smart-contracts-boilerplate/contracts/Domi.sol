@@ -7,7 +7,12 @@ abstract contract PrincipalInterface {
   function distributeSavingsRate(uint256 amount) external virtual;
 }
 
+abstract contract Homes {
+  function minted(bytes32 homeId) public virtual returns (bool);
+}
+
 contract DomiToken is ERC20, Ownable {
+  Homes private homes;
   address private _owner;
   address[] private _domiHolders;
   mapping(address => bool) private _addressInitialized;
@@ -85,4 +90,20 @@ contract DomiToken is ERC20, Ownable {
         (balanceOf(_domiHolders[i]) * totalSavingsRateOwed) / totalSupply()
       );
     }
+
+  }
+
+  function mintWithHome(
+    address currentOwnerAddress,
+    bytes32 homeId,
+    uint256 price
+  ) public onlyOwner returns (bool) {
+    // Mint domi and transfer to owner after home deposit
+    if (homes.minted(homeId)) {
+      // TODO: implement mint
+      // domi.mint(currentOwnerAddress, price);
+      return true;
+    }
+  }
+}
   }
