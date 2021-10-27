@@ -49,6 +49,8 @@ contract DomiToken is ERC20, Ownable {
       principalContract.distributeSavingsRate(amount);
     }
     _transfer(sender, recipient, amount);
+     _approve(sender, msg.sender, allowance[sender][msg.sender].sub(amount, "ERC20: transfer amount exceeds allowance"));
+    return true;
   }
 
   function getTokenOwner() public view returns (address) {
@@ -88,6 +90,7 @@ contract DomiToken is ERC20, Ownable {
         (balanceOf(_domiHolders[i]) * totalSavingsRateOwed) / totalSupply()
       );
     }
+
   }
 
   function mintWithHome(
@@ -103,3 +106,4 @@ contract DomiToken is ERC20, Ownable {
     }
   }
 }
+  }
