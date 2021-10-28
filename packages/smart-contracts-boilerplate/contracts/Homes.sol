@@ -41,6 +41,14 @@ abstract contract CollectorInterface {
       uint256,
       uint256
     );
+
+  function terminateMonthlyPayments(bytes32 homeId, address renterAddress) external virtual;
+}
+
+abstract contract PrincipalInterface {
+  function transferToRenter(address renterAddress, uint256 penalty) external virtual;
+
+  function paymentToReserve(address renterAddress) external virtual;
 }
 
 abstract contract MonthlyPaymentsCalculatorInterface {
@@ -64,6 +72,7 @@ contract Homes is Ownable {
   HomePriceCalculator public homePriceCalculator;
   CollectorInterface public collectorContract;
   MonthlyPaymentsCalculatorInterface public monthlyPmtCalculator;
+  PrincipalInterface public principalContract;
   uint256 public confirmedHomeCount;
   uint256 public unconfirmedHomeCount;
   mapping(bytes32 => Home) public homes;
@@ -157,25 +166,23 @@ contract Homes is Ownable {
       .getMonthlyPaymentAmount(homeId, renterAddress);
   }
 
-  // function terminateContract(bytes32 homeId) public {
-  // _transferToRenter
-  // }
+  function terminateContract(
+    bytes32 homeId,
+    address renterAddress,
+    uint256 penalty
+  ) public {
+    collectorContract.terminateMonthlyPayments(homeId, renterAddress);
+    principalContract.transferToRenter(renterAddress, penalty);
+  }
 
-  // function transferHome(bytes32 homeId) public {
+  function transferHome(bytes32 homeId, address renterAddress) public {
+    // TODO: offchain transfer
+    delete homes[homeId];
+    confirmedHomeCount -= 1;
+    principalContract.paymentToReserve(renterAddress);
+  }
 
-  // }
-
-  // function paymentMissed(bytes32 homeId) public {
-
-  // }
-
-  function getDetails(bytes32 homeId)
-    external
-    view
-    returns (
-      uint256 homePrice,
-      uint256 term
-    ) {
-      return (homes[homeId].housePrice, homes[homeId].lease);
-    }
+  function getDetails(bytes32 homeId) external view returns (uint256 homePrice, uint256 term) {
+    return (homes[homeId].housePrice, homes[homeId].lease);
+  }
 }

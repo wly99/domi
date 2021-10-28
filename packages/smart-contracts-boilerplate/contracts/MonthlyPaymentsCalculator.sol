@@ -13,10 +13,7 @@ abstract contract HomeContractsInterface {
     external
     view
     virtual
-    returns (
-      uint256 homePrice,
-      uint256 term
-    );
+    returns (uint256 homePrice, uint256 term);
 }
 
 abstract contract PrincipalInterface {
@@ -28,11 +25,7 @@ abstract contract PrincipalInterface {
 }
 
 abstract contract CollectorInterface {
-  function getMonthsPaid(address renterAddress)
-    public
-    view
-    virtual
-    returns (uint256);
+  function getMonthsPaid(address renterAddress) public view virtual returns (uint256);
 }
 
 contract MonthlyPaymentsCalculator is Ownable {

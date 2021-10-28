@@ -72,7 +72,7 @@ contract Collector is Ownable {
   mapping(address => MonthlyPayment) public renterToMonthlyPayment; // monthly payment consisting of savingsRate+principal+buffer that renter has to pay next
   mapping(address => PaymentHistory[]) public paymentsMade; // history of payments made by renter
   mapping(address => PaymentHistory[]) public paymentsMissed; // history of missed payments
-  mapping(address => uint) public monthsPaid; // count of months paid by renter
+  mapping(address => uint256) public monthsPaid; // count of months paid by renter
 
   function getMonthlyPaymentAmount(bytes32 homeId, address renterAddress)
     external
