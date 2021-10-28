@@ -15,7 +15,6 @@ abstract contract HomeContractsInterface {
     virtual
     returns (
       uint256 homePrice,
-      uint256 monthsPaid,
       uint256 term
     );
 }
@@ -28,10 +27,19 @@ abstract contract PrincipalInterface {
     returns (uint256 principal);
 }
 
+abstract contract CollectorInterface {
+  function getMonthsPaid(address renterAddress)
+    public
+    view
+    virtual
+    returns (uint256);
+}
+
 contract MonthlyPaymentsCalculator is Ownable {
   DomiInterface public domiContract;
   HomeContractsInterface public homeContractsContract;
   PrincipalInterface public principalContract;
+  CollectorInterface public collecterContract;
 
   function setDomiContractAddress(address _address) external onlyOwner {
     domiContract = DomiInterface(_address);
@@ -59,7 +67,8 @@ contract MonthlyPaymentsCalculator is Ownable {
     uint256 term;
     uint256 savingsRate;
     uint256 principal;
-    (homePrice, monthsPaid, term) = homeContractsContract.getDetails(homeId);
+    (homePrice, term) = homeContractsContract.getDetails(homeId);
+    monthsPaid = collecterContract.getMonthsPaid(renterAddress);
     uint256 monthsLeft = term * 12 - monthsPaid;
     savingsRate = domiContract.savingsRate();
     principal = principalContract.getPrincipal(homeId, renterAddress);

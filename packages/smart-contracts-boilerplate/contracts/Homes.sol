@@ -168,4 +168,14 @@ contract Homes is Ownable {
   // function paymentMissed(bytes32 homeId) public {
 
   // }
+
+  function getDetails(bytes32 homeId)
+    external
+    view
+    returns (
+      uint256 homePrice,
+      uint256 term
+    ) {
+      return (homes[homeId].housePrice, homes[homeId].lease);
+    }
 }
