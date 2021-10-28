@@ -72,6 +72,7 @@ contract Collector is Ownable {
   mapping(address => MonthlyPayment) public renterToMonthlyPayment; // monthly payment consisting of savingsRate+principal+buffer that renter has to pay next
   mapping(address => PaymentHistory[]) public paymentsMade; // history of payments made by renter
   mapping(address => PaymentHistory[]) public paymentsMissed; // history of missed payments
+  mapping(address => uint256) public monthsPaid; // count of months paid by renter
 
   function getMonthlyPaymentAmount(bytes32 homeId, address renterAddress)
     external
@@ -117,7 +118,12 @@ contract Collector is Ownable {
       renterToMonthlyPayment[renterAddress].buffer
     );
     paymentsMade[renterAddress].push(PaymentHistory(block.timestamp, amount));
+    monthsPaid[renterAddress] += 1;
   }
 
   // TODO check every month if renter has paid. If not paid within grace period add it as a missed payment
+
+  function getMonthsPaid(address renterAddress) public view returns (uint256) {
+    return monthsPaid[renterAddress];
+  }
 }

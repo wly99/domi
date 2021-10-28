@@ -71,7 +71,7 @@ contract Principal is Ownable {
   }
 
   // When the renter terminates their contract, release the principal back to the renterAddress minus penalties
-  function _transferToRenter(address renterAddress, uint256 penalty) private {
+  function transferToRenter(address renterAddress, uint256 penalty) external {
     uint256 renterPrincipal = _principalBalances[renterAddress];
     if (penalty > 0) {
       if (penalty <= renterPrincipal) {
