@@ -48,7 +48,7 @@ abstract contract CollectorInterface {
 abstract contract PrincipalInterface {
   function transferToRenter(address renterAddress, uint256 penalty) external virtual;
 
-  function paymentToReserve(address renterAddress) external virtual;
+  function transferToBuyHomes(address renterAddress) external virtual;
 }
 
 abstract contract MonthlyPaymentsCalculatorInterface {
@@ -147,6 +147,7 @@ contract Homes is Ownable {
     return keccak256(abi.encodePacked(streetName, postalCode));
   }
 
+  // TODO require renter to make first payment as well
   function renterSign(
     bytes32 homeId,
     address renterAddress,
@@ -179,7 +180,7 @@ contract Homes is Ownable {
     // TODO: offchain transfer
     delete homes[homeId];
     confirmedHomeCount -= 1;
-    principalContract.paymentToReserve(renterAddress);
+    principalContract.transferToBuyHomes(renterAddress);
   }
 
   function getDetails(bytes32 homeId) external view returns (uint256 homePrice, uint256 term) {
