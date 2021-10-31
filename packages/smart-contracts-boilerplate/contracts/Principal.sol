@@ -99,7 +99,7 @@ contract Principal is Ownable {
     }
   }
 
-  // When the renter/homeowner pays their dues for the full length of the term (eg 30 years), 
+  // When the renter/homeowner pays their dues for the full length of the term (eg 30 years),
   // transfer the principal to BuyHomes.sol
   function transferToBuyHomes(address renterAddress) external {
     // TODO add a check that renterPrincipal >= homePrice
@@ -107,5 +107,4 @@ contract Principal is Ownable {
     _principalBalances[renterAddress] = 0;
     domiContract.transferTokens(address(this), buyHomesContract, renterPrincipal);
   }
-
 }

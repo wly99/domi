@@ -91,7 +91,6 @@ contract DomiToken is ERC20, Ownable {
         (balanceOf(_domiHolders[i]) * totalSavingsRateOwed) / totalSupply()
       );
     }
-
   }
 
   function mintWithHome(
@@ -107,4 +106,3 @@ contract DomiToken is ERC20, Ownable {
     }
   }
 }
-  
