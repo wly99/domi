@@ -190,10 +190,12 @@ contract Homes is Ownable {
         bool boughtHome;
         housePrice= getHousePrice( streetName, postalCode);
         if (buyHomeReserves>=housePrice){
-            uint remainingReserves= buyHomeReserves-housePrice;
+          if (buyer==buyHomeAddress){
+            buyHomeReserves= buyHomeReserves-housePrice;
             addHome(currentOwnerAddress, streetName, postalCode);
             domiContract.transferTokens(buyer, currentOwnerAddress, housePrice);
             boughtHome=true;
+          }
         }
         else{
             boughtHome=false;
