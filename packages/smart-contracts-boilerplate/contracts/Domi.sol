@@ -2,12 +2,17 @@ pragma solidity ^0.8.0;
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import './Ownable.sol';
-
+import 'abdk-libraries-solidity/ABDKMath64x64.sol';
 abstract contract PrincipalInterface {
   function distributeSavingsRate(uint256 amount) external virtual;
 }
 
+abstract contract Homes {
+  function minted(bytes32 homeId) public virtual returns (bool);
+}
+
 contract DomiToken is ERC20, Ownable {
+  Homes private homes;
   address private _owner;
   address[] private _domiHolders;
   mapping(address => bool) private _addressInitialized;
@@ -44,8 +49,8 @@ contract DomiToken is ERC20, Ownable {
       principalContract.distributeSavingsRate(amount);
     }
     _transfer(sender, recipient, amount);
-     _approve(sender, msg.sender, allowance[sender][msg.sender].sub(amount, "ERC20: transfer amount exceeds allowance"));
-    return true;
+    //  _approve(sender, msg.sender, allowance[sender][msg.sender].sub(amount, "ERC20: transfer amount exceeds allowance"));
+    // return true;
   }
 
   function getTokenOwner() public view returns (address) {
@@ -86,3 +91,32 @@ contract DomiToken is ERC20, Ownable {
       );
     }
   }
+
+  function mintWithHome(
+    address currentOwnerAddress,
+    bytes32 homeId,
+    uint256 price
+  ) public onlyOwner returns (bool) {
+    // Mint domi and transfer to owner after home deposit
+    if (homes.minted(homeId)) {
+      // TODO: implement mint
+      // domi.mint(currentOwnerAddress, price);
+      return true;
+    }
+  }
+
+  function getSavingsRate() public returns (uint) {
+    return savingsRate;
+  }
+  function setSavingsRate(uint _savingsRate) public {
+    savingsRate=_savingsRate;
+  }
+  function getDomiPrice(uint idx) public returns (uint) {
+    uint16[] memory price = new uint16[](3);
+    price[0] = 10000;
+    price[1] = 9000;
+    price[2] = 12000;
+    uint domiPrice=uint256(price[idx]);
+    return domiPrice;
+  }
+}
