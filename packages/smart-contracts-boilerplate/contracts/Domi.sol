@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import './Ownable.sol';
-
+import 'abdk-libraries-solidity/ABDKMath64x64.sol';
 abstract contract PrincipalInterface {
   function distributeSavingsRate(uint256 amount) external virtual;
 }
@@ -104,5 +104,20 @@ contract DomiToken is ERC20, Ownable {
       // domi.mint(currentOwnerAddress, price);
       return true;
     }
+  }
+
+  function getSavingsRate() public returns (uint) {
+    return savingsRate;
+  }
+  function setSavingsRate(uint _savingsRate) public {
+    savingsRate=_savingsRate;
+  }
+  function getDomiPrice(uint idx) public returns (uint) {
+    uint16[] memory price = new uint16[](3);
+    price[0] = 10000;
+    price[1] = 9000;
+    price[2] = 12000;
+    uint domiPrice=uint256(price[idx]);
+    return domiPrice;
   }
 }
