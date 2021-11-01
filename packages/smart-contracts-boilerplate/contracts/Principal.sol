@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import './Ownable.sol';
@@ -27,6 +28,7 @@ contract Principal is Ownable {
   DomiInterface public domiContract;
   ReservesInterface public reservesContract;
   uint256 public savingsRateLastDistributed;
+  address public buyHomesContract;
 
   event PenaltyPaid(address from, address to, uint256 tokens);
   event ClaimRestOfPenalty(address renterAddress, uint256 balanceOwed);
@@ -37,6 +39,10 @@ contract Principal is Ownable {
 
   function setReservesContractAddress(address _address) external onlyOwner {
     reservesContract = ReservesInterface(_address);
+  }
+
+  function setBuyHomesContractAddress(address _address) external onlyOwner {
+    buyHomesContract = _address;
   }
 
   // TODO when savingsRate paid to Principal Contract, distribute to holders proportionately
@@ -71,7 +77,7 @@ contract Principal is Ownable {
   }
 
   // When the renter terminates their contract, release the principal back to the renterAddress minus penalties
-  function _transferToRenter(address renterAddress, uint256 penalty) private {
+  function transferToRenter(address renterAddress, uint256 penalty) external {
     uint256 renterPrincipal = _principalBalances[renterAddress];
     if (penalty > 0) {
       if (penalty <= renterPrincipal) {
@@ -93,5 +99,12 @@ contract Principal is Ownable {
     }
   }
 
-  // TODO When the renter/homeowner pays their dues for the full length of the term (eg 30 years), transfer the principal to BuyHomes.sol
+  // When the renter/homeowner pays their dues for the full length of the term (eg 30 years),
+  // transfer the principal to BuyHomes.sol
+  function transferToBuyHomes(address renterAddress) external {
+    // TODO add a check that renterPrincipal >= homePrice
+    uint256 renterPrincipal = _principalBalances[renterAddress];
+    _principalBalances[renterAddress] = 0;
+    domiContract.transferTokens(address(this), buyHomesContract, renterPrincipal);
+  }
 }

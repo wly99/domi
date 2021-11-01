@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
@@ -49,7 +50,7 @@ contract DomiToken is ERC20, Ownable {
       principalContract.distributeSavingsRate(amount);
     }
     _transfer(sender, recipient, amount);
-    //  _approve(sender, msg.sender, allowance[sender][msg.sender].sub(amount, "ERC20: transfer amount exceeds allowance"));
+    //  _approve(sender, msg.sender, allowance[sender][msg.sender].sub(amount, 'ERC20: transfer amount exceeds allowance'));
     // return true;
   }
 
