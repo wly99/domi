@@ -49,7 +49,6 @@ abstract contract CollectorInterface {
 abstract contract PrincipalInterface {
   function transferToRenter(address renterAddress, uint256 penalty) external virtual;
 
-
   function transferToBuyHomes(address renterAddress) external virtual;
 }
 
@@ -82,7 +81,7 @@ contract Homes is Ownable {
   bytes32[] public unconfirmedHomeIds;
   bytes32[] public unrentedHomeIds;
   address public buyHomeAddress;
-  uint buyHomeReserves;
+  uint256 buyHomeReserves;
 
   constructor() public {
     // domi = new Domi();
@@ -151,7 +150,6 @@ contract Homes is Ownable {
     return keccak256(abi.encodePacked(streetName, postalCode));
   }
 
-
   // TODO require renter to make first payment as well
   function renterSign(
     bytes32 homeId,
@@ -192,21 +190,25 @@ contract Homes is Ownable {
     return (homes[homeId].housePrice, homes[homeId].lease);
   }
 
-  function buyHome(address buyer,address currentOwnerAddress, string memory streetName, uint256 postalCode) public returns (bool){
-        uint housePrice;
-        bool boughtHome;
-        housePrice= getHousePrice( streetName, postalCode);
-        if (buyHomeReserves>=housePrice){
-          if (buyer==buyHomeAddress){
-            buyHomeReserves= buyHomeReserves-housePrice;
-            addHome(currentOwnerAddress, streetName, postalCode);
-            domiContract.transferTokens(buyer, currentOwnerAddress, housePrice);
-            boughtHome=true;
-          }
-        }
-        else{
-            boughtHome=false;
-        }
-        return boughtHome;
+  function buyHome(
+    address buyer,
+    address currentOwnerAddress,
+    string memory streetName,
+    uint256 postalCode
+  ) public returns (bool) {
+    uint256 housePrice;
+    bool boughtHome;
+    housePrice = getHousePrice(streetName, postalCode);
+    if (buyHomeReserves >= housePrice) {
+      if (buyer == buyHomeAddress) {
+        buyHomeReserves = buyHomeReserves - housePrice;
+        addHome(currentOwnerAddress, streetName, postalCode);
+        domiContract.transferTokens(buyer, currentOwnerAddress, housePrice);
+        boughtHome = true;
+      }
+    } else {
+      boughtHome = false;
     }
+    return boughtHome;
+  }
 }

@@ -6,13 +6,14 @@ import './Domi.sol';
 import '@openzeppelin/contracts/utils/math/Math.sol';
 
 abstract contract DomiInterface {
-  function setSavingsRate(
-    uint _savingsRate
-  ) external virtual;
-  function getSavingsRate() public virtual returns (uint);
-  function getDomiPrice(uint idx) public virtual returns (uint);
+  function setSavingsRate(uint256 _savingsRate) external virtual;
+
+  function getSavingsRate() public virtual returns (uint256);
+
+  function getDomiPrice(uint256 idx) public virtual returns (uint256);
 }
-// tickSize: max change in stabilityFee per update 
+
+// tickSize: max change in stabilityFee per update
 // adjustStabilityFee(newPrice):
 //  Check stabilityFee from Domi.sol
 //  Get price of Domi
@@ -24,19 +25,19 @@ abstract contract DomiInterface {
 //   Minimum stabilityFee is 0, can’t be negative so make a check
 // Update stabilityFee in Domi.sol
 
-contract SavingsRate{
-    DomiInterface public domiContract;
-    uint tickSize=1255;
-    function adjustStabilityFee(uint idx) public returns (uint){
-        uint savingsRate=domiContract.getSavingsRate();
-        uint domiPrice=domiContract.getDomiPrice(idx);
-        uint newSavingsRate=savingsRate/domiPrice;
-        if (newSavingsRate>0){
-            savingsRate=Math.max(newSavingsRate,tickSize);
-        }
-        else{
-            savingsRate=Math.max(0,tickSize);
-        }
-        domiContract.setSavingsRate(savingsRate);
+contract SavingsRate {
+  DomiInterface public domiContract;
+  uint256 tickSize = 1255;
+
+  function adjustStabilityFee(uint256 idx) public returns (uint256) {
+    uint256 savingsRate = domiContract.getSavingsRate();
+    uint256 domiPrice = domiContract.getDomiPrice(idx);
+    uint256 newSavingsRate = savingsRate / domiPrice;
+    if (newSavingsRate > 0) {
+      savingsRate = Math.max(newSavingsRate, tickSize);
+    } else {
+      savingsRate = Math.max(0, tickSize);
     }
+    domiContract.setSavingsRate(savingsRate);
+  }
 }
