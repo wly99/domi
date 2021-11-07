@@ -106,13 +106,13 @@ contract DomiToken is ERC20, Ownable {
     }
   }
 
-  function getSavingsRate() public returns (uint) {
+  function getSavingsRate() public view returns (uint) {
     return savingsRate;
   }
   function setSavingsRate(uint _savingsRate) public {
     savingsRate=_savingsRate;
   }
-  function getDomiPrice(uint idx) public returns (uint) {
+  function getDomiPrice(uint idx) public pure returns (uint) {
     uint16[] memory price = new uint16[](3);
     price[0] = 10000;
     price[1] = 9000;

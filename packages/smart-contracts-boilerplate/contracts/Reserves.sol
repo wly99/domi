@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import './Ownable.sol';
 import './Reserves.sol';
 import './HomePriceCalculator.sol';
-import "hardhat/console.sol";
+import 'hardhat/console.sol';
 
 abstract contract DomiInterface {
   function transferTokens(
@@ -19,7 +19,7 @@ contract Reserves{
     mapping(address => uint256) public reservesContractAddress;
 
     constructor() {
-        console.log("Deployed Reserves by '%s'", msg.sender);
+        console.log('Deployed Reserves by "%s"', msg.sender);
     }
     address ReservesContract;
     uint totalReserves;

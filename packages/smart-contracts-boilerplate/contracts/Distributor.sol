@@ -34,7 +34,7 @@ contract Distributor is Ownable {
     return false;
   }
 
-  function distribute() external onlyOwner {
+  function distribute() external view onlyOwner {
     require(block.timestamp - 28 days >= lastDistributed, 'Wait at least 28 days');
     uint256 stabilityFee = domiContract.getStabilityFee();
     uint256 totalSupply = domiContract.getTotalSupply();
