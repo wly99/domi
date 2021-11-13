@@ -1,8 +1,7 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import './Ownable.sol';
-
-// import 'abdk-libraries-solidity/ABDKMath64x64.sol';
 
 abstract contract DomiInterface {
   function savingsRate() external view virtual returns (uint256 savingsRate);

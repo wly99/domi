@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import './HomePriceCalculator.sol';
 // import './Domi.sol';
+
 import './Ownable.sol';
 
 abstract contract DomiInterface {
@@ -48,7 +49,7 @@ abstract contract CollectorInterface {
 abstract contract PrincipalInterface {
   function transferToRenter(address renterAddress, uint256 penalty) external virtual;
 
-  function paymentToReserve(address renterAddress) external virtual;
+  function transferToBuyHomes(address renterAddress) external virtual;
 }
 
 abstract contract MonthlyPaymentsCalculatorInterface {
@@ -79,6 +80,8 @@ contract Homes is Ownable {
   mapping(bytes32 => Home) public unconfirmedHomes;
   bytes32[] public unconfirmedHomeIds;
   bytes32[] public unrentedHomeIds;
+  address public buyHomeAddress;
+  uint256 buyHomeReserves;
 
   constructor() public {
     // domi = new Domi();
@@ -147,6 +150,7 @@ contract Homes is Ownable {
     return keccak256(abi.encodePacked(streetName, postalCode));
   }
 
+  // TODO require renter to make first payment as well
   function renterSign(
     bytes32 homeId,
     address renterAddress,
@@ -179,10 +183,32 @@ contract Homes is Ownable {
     // TODO: offchain transfer
     delete homes[homeId];
     confirmedHomeCount -= 1;
-    principalContract.paymentToReserve(renterAddress);
+    principalContract.transferToBuyHomes(renterAddress);
   }
 
   function getDetails(bytes32 homeId) external view returns (uint256 homePrice, uint256 term) {
     return (homes[homeId].housePrice, homes[homeId].lease);
+  }
+
+  function buyHome(
+    address buyer,
+    address currentOwnerAddress,
+    string memory streetName,
+    uint256 postalCode
+  ) public returns (bool) {
+    uint256 housePrice;
+    bool boughtHome;
+    housePrice = getHousePrice(streetName, postalCode);
+    if (buyHomeReserves >= housePrice) {
+      if (buyer == buyHomeAddress) {
+        buyHomeReserves = buyHomeReserves - housePrice;
+        addHome(currentOwnerAddress, streetName, postalCode);
+        domiContract.transferTokens(buyer, currentOwnerAddress, housePrice);
+        boughtHome = true;
+      }
+    } else {
+      boughtHome = false;
+    }
+    return boughtHome;
   }
 }

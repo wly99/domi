@@ -1,7 +1,9 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import './Ownable.sol';
+import 'abdk-libraries-solidity/ABDKMath64x64.sol';
 
 abstract contract PrincipalInterface {
   function distributeSavingsRate(uint256 amount) external virtual;
@@ -49,7 +51,7 @@ contract DomiToken is ERC20, Ownable {
       principalContract.distributeSavingsRate(amount);
     }
     _transfer(sender, recipient, amount);
-    //  _approve(sender, msg.sender, allowance[sender][msg.sender].sub(amount, "ERC20: transfer amount exceeds allowance"));
+    //  _approve(sender, msg.sender, allowance[sender][msg.sender].sub(amount, 'ERC20: transfer amount exceeds allowance'));
     // return true;
   }
 
@@ -103,5 +105,22 @@ contract DomiToken is ERC20, Ownable {
       // domi.mint(currentOwnerAddress, price);
       return true;
     }
+  }
+
+  function getSavingsRate() public view returns (uint256) {
+    return savingsRate;
+  }
+
+  function setSavingsRate(uint256 _savingsRate) public {
+    savingsRate = _savingsRate;
+  }
+
+  function getDomiPrice(uint256 idx) public pure returns (uint256) {
+    uint16[] memory price = new uint16[](3);
+    price[0] = 10000;
+    price[1] = 9000;
+    price[2] = 12000;
+    uint256 domiPrice = uint256(price[idx]);
+    return domiPrice;
   }
 }
