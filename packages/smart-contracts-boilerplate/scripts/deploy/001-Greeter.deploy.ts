@@ -15,6 +15,10 @@ const deployFunc: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     args: [INITIAL_GREET[chainId]],
     log: true,
   });
+  await hre.deployments.deploy('DomiMockToken', {
+    from: deployer,
+    log: true,
+  });
 };
 deployFunc.tags = ['Greeter'];
 
