@@ -1,17 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import './Principal.sol';
+import './Homes.sol';
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import './Ownable.sol';
 import 'abdk-libraries-solidity/ABDKMath64x64.sol';
 
-abstract contract PrincipalInterface {
-  function distributeSavingsRate(uint256 amount) external virtual;
-}
-
-abstract contract Homes {
-  function minted(bytes32 homeId) public virtual returns (bool);
-}
 
 contract DomiToken is ERC20, Ownable {
   Homes private homes;
@@ -23,10 +18,10 @@ contract DomiToken is ERC20, Ownable {
   uint256 public lastDistributed;
   uint256 public numOfHolders;
 
-  PrincipalInterface public principalContract;
+  Principal public principalContract;
 
   function setPrincipalContractAddress(address _address) external onlyOwner {
-    principalContract = PrincipalInterface(_address);
+    principalContract = Principal(_address);
   }
 
   constructor() public ERC20('DomiToken', 'Domi') {

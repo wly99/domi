@@ -1,21 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import './Domi.sol';
 import './Ownable.sol';
 import './Reserves.sol';
 import './HomePriceCalculator.sol';
 import 'hardhat/console.sol';
 
-abstract contract DomiInterface {
-  function transferTokens(
-    address sender,
-    address recipient,
-    uint256 amount
-  ) external payable virtual;
-}
 
 contract Reserves {
-  DomiInterface public domiContract;
+  DomiToken public domiContract;
   mapping(address => uint256) public reservesContractAddress;
 
   constructor() {

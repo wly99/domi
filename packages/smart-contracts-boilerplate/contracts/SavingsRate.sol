@@ -5,13 +5,6 @@ import './Ownable.sol';
 import './Domi.sol';
 import '@openzeppelin/contracts/utils/math/Math.sol';
 
-abstract contract DomiInterface {
-  function setSavingsRate(uint256 _savingsRate) external virtual;
-
-  function getSavingsRate() public virtual returns (uint256);
-
-  function getDomiPrice(uint256 idx) public virtual returns (uint256);
-}
 
 // tickSize: max change in stabilityFee per update
 // adjustStabilityFee(newPrice):
@@ -26,7 +19,7 @@ abstract contract DomiInterface {
 // Update stabilityFee in Domi.sol
 
 contract SavingsRate {
-  DomiInterface public domiContract;
+  DomiToken public domiContract;
   uint256 tickSize = 1255;
 
   function adjustStabilityFee(uint256 idx) public returns (uint256) {

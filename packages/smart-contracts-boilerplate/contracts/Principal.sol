@@ -2,20 +2,7 @@
 pragma solidity ^0.8.0;
 
 import './Ownable.sol';
-
-abstract contract DomiInterface {
-  function savingsRate() public view virtual returns (uint256 savingsRate);
-
-  function totalSupply() public view virtual returns (uint256 totalSupply);
-
-  function balanceOf(address whom) public view virtual returns (uint256);
-
-  function transferTokens(
-    address sender,
-    address recipient,
-    uint256 numTokens
-  ) public virtual returns (bool);
-}
+import './Domi.sol';
 
 abstract contract ReservesInterface {
   function transferBuffer(uint256 amount) external payable virtual;
@@ -25,7 +12,7 @@ contract Principal is Ownable {
   mapping(address => uint256) private _principalBalances;
   mapping(address => bool) private _principalAddressInitialized;
   address[] private _addressesWithPrincipal;
-  DomiInterface public domiContract;
+  DomiToken public domiContract;
   ReservesInterface public reservesContract;
   uint256 public savingsRateLastDistributed;
   address public buyHomesContract;
@@ -34,7 +21,7 @@ contract Principal is Ownable {
   event ClaimRestOfPenalty(address renterAddress, uint256 balanceOwed);
 
   function setDomiContractAddress(address _address) external onlyOwner {
-    domiContract = DomiInterface(_address);
+    domiContract = DomiToken(_address);
   }
 
   function setReservesContractAddress(address _address) external onlyOwner {
