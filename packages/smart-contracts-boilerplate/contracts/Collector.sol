@@ -69,11 +69,12 @@ contract Collector is Ownable {
     uint256 buffer;
   }
 
-  mapping(address => uint256) public renterToHome; // maps renter's public address to homeId
-  mapping(address => MonthlyPayment) public renterToMonthlyPayment; // monthly payment consisting of savingsRate+buffer that renter has to pay next
-  mapping(address => PaymentHistory[]) public paymentsMade; // history of payments made by renter
-  mapping(address => PaymentHistory[]) public paymentsMissed; // history of missed payments
-  mapping(address => uint256) public monthsPaid; // count of months paid by renter
+  mapping(address => uint256) private renterToHome; // maps renter's public address to homeId
+  mapping(address => MonthlyPayment) private renterToMonthlyPayment; // monthly payment consisting of savingsRate+buffer that renter has to pay next
+  mapping(address => PaymentHistory[]) private paymentsMade; // history of payments made by renter
+  mapping(address => PaymentHistory[]) private paymentsMissed; // history of missed payments
+  mapping(address => uint256) private lastPaid; // when the renter last paid
+  mapping(address => uint256) private monthsPaid; // count of months paid by renter
 
   function getMonthlyPaymentAmount(bytes32 homeId, address renterAddress)
     external
@@ -97,6 +98,7 @@ contract Collector is Ownable {
   }
 
   function payMonthlyPayments(address renterAddress, uint256 amount) external payable {
+    require(lastPaid[renterAddress] == 0 || lastPaid[renterAddress] - block.timestamp >= 28 days, 'Can only pay once a month');
     uint256 totalPayable = renterToMonthlyPayment[renterAddress].savingsRate +
       // renterToMonthlyPayment[renterAddress].principal +
       renterToMonthlyPayment[renterAddress].buffer;
@@ -120,6 +122,7 @@ contract Collector is Ownable {
     );
     paymentsMade[renterAddress].push(PaymentHistory(block.timestamp, amount));
     monthsPaid[renterAddress] += 1;
+    lastPaid[renterAddress] = block.timestamp;
   }
 
   // TODO check every month if renter has paid. If not paid within grace period add it as a missed payment
