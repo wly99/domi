@@ -9,7 +9,7 @@ abstract contract MonthlyPaymentsCalculatorInterface {
     virtual
     returns (
       uint256,
-      uint256,
+      // uint256,
       uint256
     );
 }
@@ -21,16 +21,16 @@ abstract contract DomiInterface {
     uint256 amount
   ) external payable virtual;
 
-  function transferTokensToPrincipalContract(
-    address renterAddress,
-    address principalContractAddress,
-    uint256 amount
-  ) external virtual;
+  // function transferTokensToPrincipalContract(
+  //   address renterAddress,
+  //   address principalContractAddress,
+  //   uint256 amount
+  // ) external virtual;
 }
 
-abstract contract PrincipalInterface {
-  function transferPrincipal(address renterAddress, uint256 amount) external payable virtual;
-}
+// abstract contract PrincipalInterface {
+//   function transferPrincipal(address renterAddress, uint256 amount) external payable virtual;
+// }
 
 abstract contract ReservesInterface {
   function transferBuffer(uint256 amount) external payable virtual;
@@ -39,7 +39,7 @@ abstract contract ReservesInterface {
 contract Collector is Ownable {
   MonthlyPaymentsCalculatorInterface public monthlyPaymentsCalculatorContract;
   DomiInterface public domiContract;
-  PrincipalInterface public principalContract;
+  // PrincipalInterface public principalContract;
   ReservesInterface public reservesContract;
 
   function setMonthlyPaymentsCalculatorContractAddress(address _address) external onlyOwner {
@@ -50,9 +50,9 @@ contract Collector is Ownable {
     domiContract = DomiInterface(_address);
   }
 
-  function setPrincipalContractAddress(address _address) external onlyOwner {
-    principalContract = PrincipalInterface(_address);
-  }
+  // function setPrincipalContractAddress(address _address) external onlyOwner {
+  //   principalContract = PrincipalInterface(_address);
+  // }
 
   function setReservesContractAddress(address _address) external onlyOwner {
     reservesContract = ReservesInterface(_address);
@@ -65,12 +65,12 @@ contract Collector is Ownable {
 
   struct MonthlyPayment {
     uint256 savingsRate;
-    uint256 principal;
+    // uint256 principal;
     uint256 buffer;
   }
 
   mapping(address => uint256) public renterToHome; // maps renter's public address to homeId
-  mapping(address => MonthlyPayment) public renterToMonthlyPayment; // monthly payment consisting of savingsRate+principal+buffer that renter has to pay next
+  mapping(address => MonthlyPayment) public renterToMonthlyPayment; // monthly payment consisting of savingsRate+buffer that renter has to pay next
   mapping(address => PaymentHistory[]) public paymentsMade; // history of payments made by renter
   mapping(address => PaymentHistory[]) public paymentsMissed; // history of missed payments
   mapping(address => uint256) public monthsPaid; // count of months paid by renter
@@ -79,26 +79,26 @@ contract Collector is Ownable {
     external
     returns (
       uint256,
-      uint256,
+      // uint256,
       uint256
     )
   {
     (
       uint256 savingsRatePayment,
-      uint256 principalPayment,
+      // uint256 principalPayment,
       uint256 bufferPayment
     ) = monthlyPaymentsCalculatorContract.calculatePayment(homeId, renterAddress);
     renterToMonthlyPayment[renterAddress] = MonthlyPayment(
       savingsRatePayment,
-      principalPayment,
+      // principalPayment,
       bufferPayment
     );
-    return (savingsRatePayment, principalPayment, bufferPayment);
+    return (savingsRatePayment, bufferPayment);
   }
 
   function payMonthlyPayments(address renterAddress, uint256 amount) external payable {
     uint256 totalPayable = renterToMonthlyPayment[renterAddress].savingsRate +
-      renterToMonthlyPayment[renterAddress].principal +
+      // renterToMonthlyPayment[renterAddress].principal +
       renterToMonthlyPayment[renterAddress].buffer;
     require(amount >= totalPayable, 'Payment is insufficient');
     // TODO
@@ -109,10 +109,10 @@ contract Collector is Ownable {
       address(domiContract),
       renterToMonthlyPayment[renterAddress].savingsRate
     );
-    principalContract.transferPrincipal(
-      renterAddress,
-      renterToMonthlyPayment[renterAddress].principal
-    );
+    // principalContract.transferPrincipal(
+    //   renterAddress,
+    //   renterToMonthlyPayment[renterAddress].principal
+    // );
     domiContract.transferTokens(
       renterAddress,
       address(reservesContract),

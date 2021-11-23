@@ -50,28 +50,28 @@ contract MonthlyPaymentsCalculator is Ownable {
     view
     returns (
       uint256,
-      uint256,
       uint256
+      // uint256
     )
   {
     uint256 homePrice;
-    uint256 monthsPaid;
+    // uint256 monthsPaid;
     uint256 term;
     uint256 savingsRate;
-    uint256 principal;
+    // uint256 principal;
     (homePrice, term) = homeContractsContract.getDetails(homeId);
-    monthsPaid = collecterContract.getMonthsPaid(renterAddress);
-    uint256 monthsLeft = term * 12 - monthsPaid;
+    // monthsPaid = collecterContract.getMonthsPaid(renterAddress);
+    // uint256 monthsLeft = term * 12 - monthsPaid;
     savingsRate = domiContract.savingsRate();
-    principal = principalContract.getPrincipal(homeId, renterAddress);
+    // principal = principalContract.getPrincipal(homeId, renterAddress);
 
     uint256 savingsRatePayment;
-    uint256 principalPayment;
+    // uint256 principalPayment;
     uint256 bufferPayment;
     savingsRatePayment = _calculateSavingsRatePayment(homePrice, savingsRate);
-    principalPayment = _calculatePrincipalPayment(homePrice, savingsRate, monthsLeft, principal);
+    // principalPayment = _calculatePrincipalPayment(homePrice, savingsRate, monthsLeft, principal);
     bufferPayment = _calculateBufferPayment(homePrice, savingsRate);
-    return (savingsRatePayment, principalPayment, bufferPayment);
+    return (savingsRatePayment, bufferPayment);
   }
 
   function _calculateSavingsRatePayment(uint256 homePrice, uint256 savingsRate)
@@ -84,22 +84,22 @@ contract MonthlyPaymentsCalculator is Ownable {
     return (homePrice * savingsRate) / 12 / 10**3 + 1;
   }
 
-  function _calculatePrincipalPayment(
-    // TODO fix bug
-    uint256 homePrice,
-    uint256 savingsRate,
-    uint256 monthsLeft,
-    uint256 principal
-  ) private pure returns (uint256) {
-    uint256 futureValueOfPrincipal = compound(principal, monthsLeft, savingsRate);
-    uint256 shortfall = homePrice - futureValueOfPrincipal;
-    // uint256 payment = calculatePMT(savingsRate, monthsLeft, principal, shortfall);
-    // return payment;
-    // for now just naively divide shortfall by monthsLeft, will factor in future monthly principal compounding next time
-    return approximate(shortfall, monthsLeft, savingsRate);
-    // shortfall -= approximate(shortfall, monthsLeft, savingsRate);
-    // return shortfall / monthsLeft;
-  }
+  // function _calculatePrincipalPayment(
+  //   // TODO fix bug
+  //   uint256 homePrice,
+  //   uint256 savingsRate,
+  //   uint256 monthsLeft,
+  //   uint256 principal
+  // ) private pure returns (uint256) {
+  //   uint256 futureValueOfPrincipal = compound(principal, monthsLeft, savingsRate);
+  //   uint256 shortfall = homePrice - futureValueOfPrincipal;
+  //   // uint256 payment = calculatePMT(savingsRate, monthsLeft, principal, shortfall);
+  //   // return payment;
+  //   // for now just naively divide shortfall by monthsLeft, will factor in future monthly principal compounding next time
+  //   return approximate(shortfall, monthsLeft, savingsRate);
+  //   // shortfall -= approximate(shortfall, monthsLeft, savingsRate);
+  //   // return shortfall / monthsLeft;
+  // }
 
   function _calculateBufferPayment(uint256 homePrice, uint256 savingsRate)
     private
@@ -118,46 +118,46 @@ contract MonthlyPaymentsCalculator is Ownable {
     }
   }
 
-  // assumes rate has 5 decimals. Rounds down.
-  // returns in 2 decimals
-  function compound(
-    uint256 principal,
-    uint256 timePeriods,
-    uint256 rate
-  ) public pure returns (uint256) {
-    principal *= 10**3;
-    for (uint256 i = 0; i < timePeriods; i++) {
-      principal += (principal * rate) / 12 / 10**5;
-    }
-    return principal / 10**3;
-  }
+  // // assumes rate has 5 decimals. Rounds down.
+  // // returns in 2 decimals
+  // function compound(
+  //   uint256 principal,
+  //   uint256 timePeriods,
+  //   uint256 rate
+  // ) public pure returns (uint256) {
+  //   principal *= 10**3;
+  //   for (uint256 i = 0; i < timePeriods; i++) {
+  //     principal += (principal * rate) / 12 / 10**5;
+  //   }
+  //   return principal / 10**3;
+  // }
 
-  function approximate(
-    uint256 shortfall,
-    uint256 monthsLeft,
-    uint256 savingsRate
-  ) public pure returns (uint256) {
-    shortfall *= 1;
-    uint256 approx = shortfall / monthsLeft;
-    uint256 temp;
-    for (uint256 i = 0; i < 100; i++) {
-      temp = 0;
-      for (uint256 j = 0; j < monthsLeft; j++) {
-        temp += approx;
-        temp += (temp * savingsRate) / 12 / 10**5;
-      }
-      if (temp > shortfall) {
-        approx -= 9;
-      } else if (temp == shortfall) {
-        return approx;
-      } else {
-        return (approx + 10);
-      }
-    }
-    return approx;
-    // uint approximateMonthlyInterest = shortfall * savingsRate / 12 / 10**5;
-    // return approximateMonthlyInterest * monthsLeft / 10**3;
-  }
+  // function approximate(
+  //   uint256 shortfall,
+  //   uint256 monthsLeft,
+  //   uint256 savingsRate
+  // ) public pure returns (uint256) {
+  //   shortfall *= 1;
+  //   uint256 approx = shortfall / monthsLeft;
+  //   uint256 temp;
+  //   for (uint256 i = 0; i < 100; i++) {
+  //     temp = 0;
+  //     for (uint256 j = 0; j < monthsLeft; j++) {
+  //       temp += approx;
+  //       temp += (temp * savingsRate) / 12 / 10**5;
+  //     }
+  //     if (temp > shortfall) {
+  //       approx -= 9;
+  //     } else if (temp == shortfall) {
+  //       return approx;
+  //     } else {
+  //       return (approx + 10);
+  //     }
+  //   }
+  //   return approx;
+  //   // uint approximateMonthlyInterest = shortfall * savingsRate / 12 / 10**5;
+  //   // return approximateMonthlyInterest * monthsLeft / 10**3;
+  // }
 
   // function calculatePMT(
   //   uint256 savingsRate,
@@ -225,14 +225,14 @@ contract MonthlyPaymentsCalculator is Ownable {
     return _calculateSavingsRatePayment(homePrice, savingsRate);
   }
 
-  function testCalculatePrincipalPayment(
-    uint256 homePrice,
-    uint256 savingsRate,
-    uint256 monthsLeft,
-    uint256 principal
-  ) external pure returns (uint256) {
-    return _calculatePrincipalPayment(homePrice, savingsRate, monthsLeft, principal);
-  }
+  // function testCalculatePrincipalPayment(
+  //   uint256 homePrice,
+  //   uint256 savingsRate,
+  //   uint256 monthsLeft,
+  //   uint256 principal
+  // ) external pure returns (uint256) {
+  //   return _calculatePrincipalPayment(homePrice, savingsRate, monthsLeft, principal);
+  // }
 
   function testCalculateBufferPayment(uint256 homePrice, uint256 savingsRate)
     external
