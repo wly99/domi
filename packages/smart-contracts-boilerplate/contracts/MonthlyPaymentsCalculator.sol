@@ -48,11 +48,8 @@ contract MonthlyPaymentsCalculator is Ownable {
   function calculatePayment(bytes32 homeId, address renterAddress)
     external
     view
-    returns (
-      uint256,
-      uint256
-      // uint256
-    )
+    returns (uint256, uint256)
+  // uint256
   {
     uint256 homePrice;
     // uint256 monthsPaid;
