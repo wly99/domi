@@ -98,7 +98,10 @@ contract Collector is Ownable {
   }
 
   function payMonthlyPayments(address renterAddress, uint256 amount) external payable {
-    require(lastPaid[renterAddress] == 0 || lastPaid[renterAddress] - block.timestamp >= 28 days, 'Can only pay once a month');
+    require(
+      lastPaid[renterAddress] == 0 || lastPaid[renterAddress] - block.timestamp >= 28 days,
+      'Can only pay once a month'
+    );
     uint256 totalPayable = renterToMonthlyPayment[renterAddress].savingsRate +
       // renterToMonthlyPayment[renterAddress].principal +
       renterToMonthlyPayment[renterAddress].buffer;
